@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "firechat-21e02": {
+      "hosting": {
+        "app": [
+          "firechat-21e02"
+        ]
+      }
+    }
+  }
+}

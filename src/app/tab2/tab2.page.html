@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Download
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,6 +12,29 @@
       <ion-title size="large">Tab 2</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Youtube Downloader</ion-card-title>
+      <ion-card-subtitle>Powered by DarkUnknowKnigth</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Url</ion-label>
+          <ion-input placeholder="youtube.com/watch?v=xxxxxxxxxxx"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Select your type of file</ion-label>
+          <ion-select placeholder="Type" >
+            <ion-select-option value="video">Video</ion-select-option>
+            <ion-select-option value="audio">Audio</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="block">
+        <ion-icon name="download"></ion-icon>
+        <ion-label>Descargar</ion-label> 
+      </ion-button>
+    </ion-card-content>
+   </ion-card>
 </ion-content>

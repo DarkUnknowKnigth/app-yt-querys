@@ -1,0 +1,39 @@
+.song{
+    text-align: center;
+    width: 100%;
+}
+.wrapper-player{
+    position: sticky;
+    bottom: 0;
+}
+.player{
+    display: flex;
+    background-color:#121212;
+}
+.btn-player{
+    width: 100%;
+}
+.display-player{
+    width: 40%;
+    margin: 0;
+}
+.display-list{
+    margin: 0 ;
+    width: 60%;
+}
+.container{
+    display: flex;
+}
+@media only screen and (max-width:700px){
+    .container{
+        display: block;
+    }
+    .display-player{
+        width: 100%;
+        margin: 0;
+    }
+    .display-list{
+        width: 100%;
+        margin: 0 ;
+    }
+}

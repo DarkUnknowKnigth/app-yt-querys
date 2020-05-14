@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      Player
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,59 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Reproductor</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div class="container">
+    <div class="display-player">
+      <ion-card>
+        <div class="song">
+          <img src="/assets/images/song.png"/>
+        </div>
+        <ion-card-header>
+          <ion-card-title>Song</ion-card-title>
+          <ion-card-subtitle>Artist</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content> 
+          <audio controls id="player" style="display:none">
+            <source src="http://localhost:3000/audio/psPN08Rvsec.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+            <progress min="0" max="100" value="0" id="player-progress"></progress>
+          </audio>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="display-list">
+      <ion-list>
+        <ion-list-header>Downloaded songs</ion-list-header>
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img src="/assets/images/song.png">
+          </ion-thumbnail>
+          <ion-label>Artist - Song</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+  <div class="wrapper-player">
+    <ion-label position="floating">Artisat - Song</ion-label>
+    <ion-progress-bar></ion-progress-bar>
+    <div class="player"> 
+      <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').play()">
+        <ion-icon name="play-outline">
+        </ion-icon>
+      </ion-button>
+        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').pause()">
+          <ion-icon name="pause-outline"></ion-icon>
+        </ion-button>
+        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').volume += document.getElementById('player').volume < 1 ?  0.1 : 0">
+          <ion-icon name="volume-high-outline">
+          </ion-icon>
+        </ion-button>
+        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').volume -= document.getElementById('player').volume > 0 ? 0.1 : 0 ">
+          <ion-icon name="volume-low-outline">
+          </ion-icon>
+        </ion-button>
+    </div>
+  </div>
 </ion-content>
