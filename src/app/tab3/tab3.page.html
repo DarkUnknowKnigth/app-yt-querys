@@ -47,21 +47,22 @@
     <ion-label position="floating">Artisat - Song</ion-label>
     <ion-progress-bar></ion-progress-bar>
     <div class="player"> 
+      <ion-button class="btn-player" size="large" color="light">
+        <ion-icon name="play-skip-back-outline"></ion-icon>
+      </ion-button>
       <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').play()">
         <ion-icon name="play-outline">
         </ion-icon>
       </ion-button>
-        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').pause()">
-          <ion-icon name="pause-outline"></ion-icon>
-        </ion-button>
-        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').volume += document.getElementById('player').volume < 1 ?  0.1 : 0">
-          <ion-icon name="volume-high-outline">
-          </ion-icon>
-        </ion-button>
-        <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').volume -= document.getElementById('player').volume > 0 ? 0.1 : 0 ">
-          <ion-icon name="volume-low-outline">
-          </ion-icon>
-        </ion-button>
+      <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').pause()">
+        <ion-icon name="pause-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="btn-player" size="large" color="light" onclick="document.getElementById('player').pause();document.getElementById('player').currentTime = 0;">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="btn-player" size="large" color="light">
+        <ion-icon name="play-skip-forward-outline"></ion-icon>
+      </ion-button>
     </div>
   </div>
 </ion-content>

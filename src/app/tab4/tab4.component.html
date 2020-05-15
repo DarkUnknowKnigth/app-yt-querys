@@ -15,15 +15,18 @@
 
    <ion-card>
     <ion-card-header>
-      <ion-card-title>Datos de usuario</ion-card-title>
-      <ion-card-subtitle>Tipo de autentificacion</ion-card-subtitle>
+      <ion-card-title>Crear Cuenta</ion-card-title>
+      <ion-card-subtitle>Cuenta en YT-App</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      
       <ion-list>
         <ion-item>
-          <ion-label position="floating">Profile</ion-label>
-          <ion-input accept="file" placeholder="profile"></ion-input>
+          <ion-button size="default">
+            <ion-icon name="duplicate-outline"></ion-icon>
+            <ion-label>Unpload Profile</ion-label>
+          </ion-button>
+          <ion-label  class="is-mobile">Choose one</ion-label>
+          <ion-input type="file" file #img style="display: none"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Name</ion-label>
@@ -43,5 +46,4 @@
       </ion-button>
     </ion-card-content>
    </ion-card>
-  
 </ion-content>

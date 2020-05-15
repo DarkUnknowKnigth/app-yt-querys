@@ -20,6 +20,8 @@
 .display-list{
     margin: 0 ;
     width: 60%;
+    max-height: 700px;
+    overflow-y:auto;
 }
 .container{
     display: flex;
@@ -35,5 +37,7 @@
     .display-list{
         width: 100%;
         margin: 0 ;
+        max-height: 450px;
+        overflow-y: scroll;;
     }
 }
