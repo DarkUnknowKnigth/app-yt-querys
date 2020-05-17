@@ -11,8 +11,8 @@ export const environment = {
     projectId: 'firechat-21e02',
     storageBucket: 'firechat-21e02.appspot.com',
     messagingSenderId: '828101036030',
-    appId: '1:828101036030:web:63104cab8258aea6abe2af',
-    measurementId: 'G-3ECXV0HQ6T'
+    appId: '1:828101036030:web:1eceb391b470978babe2af',
+    measurementId: 'G-1PVF68YRDC'
   }
 };
 

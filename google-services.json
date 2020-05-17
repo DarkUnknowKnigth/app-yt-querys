@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "828101036030",
+    "firebase_url": "https://firechat-21e02.firebaseio.com",
+    "project_id": "firechat-21e02",
+    "storage_bucket": "firechat-21e02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828101036030:android:430b29b0be3f8895abe2af",
+        "android_client_info": {
+          "package_name": "yt.download.devil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828101036030-117bv8k51ra2cbablditbr7vfu8j78ec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX1h4XqDoHvKb1gVM7VeoXz7GfoNe9DDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "828101036030-117bv8k51ra2cbablditbr7vfu8j78ec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Download
+      YT-Download / Download
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,32 +9,43 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="large">DownLoad</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Youtube Downloader</ion-card-title>
+      <ion-card-title>Magic Downloader</ion-card-title>
       <ion-card-subtitle>Powered by DarkUnknowKnigth</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
         <ion-item>
           <ion-label position="floating">Url</ion-label>
-          <ion-input placeholder="youtube.com/watch?v=xxxxxxxxxxx"></ion-input>
+          <ion-input placeholder="youtube.com/watch?v=xxxxxxxxxxx" [(ngModel)]="url"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Select your type of file</ion-label>
-          <ion-select placeholder="Type" >
+          <ion-select placeholder="Type" [(ngModel)]="type">
             <ion-select-option value="video">Video</ion-select-option>
             <ion-select-option value="audio">Audio</ion-select-option>
           </ion-select>
         </ion-item>
+        <ion-item *ngIf="type=='video'">
+          <ion-label position="floating">Select your resolution</ion-label>
+          <ion-select placeholder="Resolution" [(ngModel)]="resolution">
+            <ion-select-option value="1080">1080p</ion-select-option>
+            <ion-select-option value="720">720p</ion-select-option>
+            <ion-select-option value="480">480p</ion-select-option>
+            <ion-select-option value="360">360p</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-button slot="end" expand="block" color="tertiary" (click)="download()">
+            <ion-icon name="download"></ion-icon>
+            <ion-label>Descargar</ion-label> 
+          </ion-button>
+        </ion-item>
       </ion-list>
-      <ion-button expand="block">
-        <ion-icon name="download"></ion-icon>
-        <ion-label>Descargar</ion-label> 
-      </ion-button>
     </ion-card-content>
    </ion-card>
 </ion-content>

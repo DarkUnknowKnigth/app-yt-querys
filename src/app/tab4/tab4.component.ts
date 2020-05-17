@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tab4',
@@ -6,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tab4.component.scss'],
 })
 export class Tab4Component implements OnInit {
-
-  constructor() { }
-
+  constructor(public auth : AuthService) {
+  }
   ngOnInit() {}
-
+  loginG(){
+    this.auth.loginGoogle()
+  }
 }

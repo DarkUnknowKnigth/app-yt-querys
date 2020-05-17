@@ -1,5 +1,7 @@
 {
   "name": "yt-app-downloader",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
