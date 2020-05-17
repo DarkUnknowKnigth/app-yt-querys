@@ -46,6 +46,11 @@
           </ion-button>
         </ion-item>
       </ion-list>
+      <div class="center" *ngIf="downloading">
+        <h1>Downloading</h1>
+        <img src="/assets/images/loading.gif" alt="loading" class="loading">
+      </div>
+
     </ion-card-content>
    </ion-card>
 </ion-content>

@@ -2,14 +2,18 @@ import { Component, ViewChild } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
 import { IonRange } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { DownloadService } from '../services/download.service';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page {
+export class Tab3Page{
   songs: any[] = [];
+  videos: any[] = [];
+  resolution = '480';
   base = 'http://localhost:3000';
   player: Howl = null;
   playingSong: any = {}
@@ -17,12 +21,27 @@ export class Tab3Page {
   progress;
   displayProgress = '';
   @ViewChild('range') range:IonRange;
-  constructor(private songsv: SongService) {
+  constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService) {
     this.songsv.all().subscribe( resp => {
-      this.songs = resp['songs'];
+      this.songsv.updateSongsList(resp['songs']);
+      this.songsv.currentSongs.subscribe( songs => this.songs = songs);
+      this.route.queryParams.subscribe(params => {
+        if(params['id']){
+          if(params['id'].length === 11){
+            const songQuery = this.songs.filter( song=> song.id === params['id'] );
+            this.start(songQuery[0]);
+          }
+        }
+      });
     }, err => {
-      console.log(err);
+      console.error(err);
     });
+    this.dwlsv.all().subscribe( resp => {
+      this.dwlsv.updateVideoList(resp['videos']);
+      this.dwlsv.currentVideos.subscribe( videos  => this.videos = videos);
+    }, err =>{
+      console.error(err);
+    })
   }
   start(song: any){
     if(this.player){
@@ -88,8 +107,8 @@ export class Tab3Page {
       this.updateProgress();
     },1000);
   }
-  download(song: any){
-    window.open(this.base+'/yt'+song.pathDownload,'_blank');
+  download(song: any,type: string){
+    window.open(`${this.base}/yt${song.pathDownload}&resolution=${this.resolution}`,'_blank');
   }
   delete(song: any){
     this.songs = this.songs.filter( _song => _song.id !== song.id );

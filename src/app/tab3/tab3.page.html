@@ -13,7 +13,7 @@
     </ion-toolbar>
   </ion-header>
   <div class="player-wrapper">
-    <img [src]="playingSong.imagePath" *ngIf="playingSong.id" (click)="togglePlayer(isPlaying)" class="notMobile">
+    <img [src]="playingSong.imagePath" *ngIf="playingSong.id" (click)="togglePlayer(isPlaying)" class="notMobile touchable">
     <ion-toolbar class="notMobile" *ngIf="playingSong.id">
       <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
         <ion-label style="margin-left:0px; width:400px">{{playingSong.artist}} - {{playingSong.title}}</ion-label>
@@ -46,7 +46,7 @@
     <ion-row>
       <ion-col size="12" size-md *ngIf="playingSong.id" class="mobile">
         <ion-card>
-          <ion-img [src]="playingSong.imagePath?playingSong.imagePath:'/assets/images/song.png'">
+          <ion-img [src]="playingSong.imagePath?playingSong.imagePath:'/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable">
           </ion-img>
           <ion-card-header>
             <ion-card-title>{{playingSong.title}} </ion-card-title>
@@ -84,7 +84,7 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col size="12" size-lg>
+      <ion-col size="12">
         <ion-list>
           <ion-list-header class="ion-text-center"><h1>Downloaded songs</h1></ion-list-header>
           <ion-item>
@@ -92,20 +92,57 @@
             <ion-input type="text" placeholder="Busca una cancion"></ion-input>
           </ion-item>
           <ion-item-group *ngFor="let song of songs">
-            <ion-item>
+            <ion-item (click)="start(song)" class="touchable">
               <ion-thumbnail slot="start">
                 <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'">
               </ion-thumbnail>
               <ion-label>{{song.artist}} - {{song.title}}</ion-label>
             </ion-item>
             <ion-item>
-              <ion-label color="success" >On server</ion-label>
+              <ion-label color="success" class="notMobile">On server</ion-label>
+              <ion-label color="success" class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
               <ion-button slot="end" color="success">
                 <ion-label>{{song.duration}}</ion-label>
               </ion-button>
               <ion-button slot="end" color="light" size="small"  (click)="start(song)"><ion-icon name="play-outline"></ion-icon></ion-button>
-              <ion-button slot="end" color="light" size="small" (click)="download(song)"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="light" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" size="small" (click)="delete(song)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <ion-list>
+          <ion-list-header class="ion-text-center"><h1>Active Videos</h1></ion-list-header>
+          <ion-item>
+            <ion-label position="floating">Buscador</ion-label>
+            <ion-input type="text" placeholder="Busca una cancion"></ion-input>
+          </ion-item>
+          <ion-item-group *ngFor="let video of videos">
+            <ion-item class="mobile">
+              <img [src]="video.imagePath? video.imagePath:'/assets/images/video.png'">
+            </ion-item>
+            <ion-item>
+              <ion-thumbnail slot="start" class="notMobile">
+                <img [src]="video.imagePath? video.imagePath:'/assets/images/video.png'">
+              </ion-thumbnail>
+              <ion-label>{{video.artist}} - {{video.title}}</ion-label>
+              <ion-select placeholder="Resolutions" [(ngModel)]="resolution" class="notMobile">
+                <ion-select-option *ngFor="let re of video.resolutions" [value]="re">{{re}}p</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item class="mobile">
+              <ion-select placeholder="Resolutions" [(ngModel)]="resolution">
+                <ion-select-option *ngFor="let re of video.resolutions" [value]="re">{{re}}p</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label color="success" class="notMobile">Avalible to download</ion-label>
+              <ion-label color="success" class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
+              <ion-button slot="end" color="success">
+                <ion-label>{{video.duration}}</ion-label>
+              </ion-button>
+              <ion-button slot="end" color="light" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </ion-list>

@@ -29,6 +29,9 @@
 .notMobile{
     display: flex;
 }
+.touchable:hover{
+    cursor: pointer;
+}
 .mobile{
     display: none;
 }
