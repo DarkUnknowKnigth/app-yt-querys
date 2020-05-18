@@ -23,4 +23,7 @@ export class DownloadService {
   updateVideoList(videos: any[]){
     this.videoSource.next(videos);
   }
+  delete(id: string){
+    return this.http.delete(`${this.authsv.base}/videos/${id}`);
+  }
 }

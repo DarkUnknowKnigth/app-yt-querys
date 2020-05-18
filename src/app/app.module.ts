@@ -20,7 +20,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      rippleEffect:false,
+      mode:'md'
+    }),
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),

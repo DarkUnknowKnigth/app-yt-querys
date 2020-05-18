@@ -143,6 +143,7 @@
                 <ion-label>{{video.duration}}</ion-label>
               </ion-button>
               <ion-button slot="end" color="light" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="danger" size="small" (click)="deleteVideo(video)"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </ion-list>

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnChanges, SimpleChange } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
 import { IonRange } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { DownloadService } from '../services/download.service';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page{
+export class Tab3Page {
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
@@ -24,24 +24,45 @@ export class Tab3Page{
   constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService) {
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
-      this.songsv.currentSongs.subscribe( songs => this.songs = songs);
-      this.route.queryParams.subscribe(params => {
-        if(params['id']){
-          if(params['id'].length === 11){
-            const songQuery = this.songs.filter( song=> song.id === params['id'] );
-            this.start(songQuery[0]);
-          }
-        }
+      this.songsv.currentSongs.subscribe( songs => {
+        this.songs = songs;
+        this.shoudlPlay();
+      });
+      this.dwlsv.all().subscribe( resp => {
+        this.dwlsv.updateVideoList(resp['videos']);
+        this.dwlsv.currentVideos.subscribe( videos  => {
+          this.videos = videos;
+          this.shoudlPlay();
+        });
+      }, err =>{
+        console.error(err);
       });
     }, err => {
       console.error(err);
     });
-    this.dwlsv.all().subscribe( resp => {
-      this.dwlsv.updateVideoList(resp['videos']);
-      this.dwlsv.currentVideos.subscribe( videos  => this.videos = videos);
-    }, err =>{
-      console.error(err);
-    })
+  }
+  shoudlPlay(){
+    const id = this.route.snapshot.queryParams.id;
+    const download = this.route.snapshot.queryParams.download;
+    if (id !== undefined) {
+      if (id.length === 11 && download === undefined) {
+        const songQuery = this.songs.filter( song => song.id === id );
+        if (songQuery.length > 0) {
+          this.isPlaying = true;
+          this.start(songQuery[0]);
+        }
+      }
+      else{
+        if (download !== undefined) {
+          if (download === '1'){
+            const videoQuery = this.videos.filter( video => video.id === id );
+            if(videoQuery.length > 0){
+              this.download(videoQuery[0],'video');
+            }
+          }
+        }
+      }
+    }
   }
   start(song: any){
     if(this.player){
@@ -73,7 +94,6 @@ export class Tab3Page{
     } else {
       this.player.play();
     }
-
   }
   prev(){
     const i = this.songs.indexOf(this.playingSong);
@@ -107,13 +127,21 @@ export class Tab3Page{
       this.updateProgress();
     },1000);
   }
-  download(song: any,type: string){
-    window.open(`${this.base}/yt${song.pathDownload}&resolution=${this.resolution}`,'_blank');
+  download(file: any,type: string){
+    window.open(`${this.base}/yt${file.pathDownload}&resolution=${this.resolution}`,'_blank');
+  }
+  deleteVideo(video: any){
+    this.dwlsv.delete(video.id).subscribe( resp => {
+      console.log(resp);
+      this.videos = this.videos.filter( _video => _video.id !== video.id );
+    }, err => {
+      console.log(err);
+    });
   }
   delete(song: any){
-    this.songs = this.songs.filter( _song => _song.id !== song.id );
     this.songsv.delete(song.id).subscribe( resp => {
       console.log(resp);
+      this.songs = this.songs.filter( _song => _song.id !== song.id );
     }, err => {
       console.log(err);
     });

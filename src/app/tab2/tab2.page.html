@@ -40,17 +40,22 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-button slot="end" expand="block" color="tertiary" (click)="download()">
+          <ion-button slot="end" expand="block" color="tertiary" (click)="download()" [disabled]="!downloaded">
             <ion-icon name="download"></ion-icon>
-            <ion-label>Descargar</ion-label> 
+            <ion-label>Download </ion-label> 
           </ion-button>
         </ion-item>
       </ion-list>
-      <div class="center" *ngIf="downloading">
-        <h1>Downloading</h1>
-        <img src="/assets/images/loading.gif" alt="loading" class="loading">
-      </div>
-
+      <ion-grid *ngIf="downloading">
+        <ion-row class="ion-text-center">
+          <ion-col size=12>
+            <h1>Downloading</h1>
+          </ion-col>
+          <ion-col size="12">
+            <img src="/assets/images/loading.gif" alt="loading" class="loading">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
    </ion-card>
 </ion-content>
