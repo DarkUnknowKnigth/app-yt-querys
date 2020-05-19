@@ -6,7 +6,7 @@ import { auth } from 'firebase/app'
   providedIn: 'root'
 })
 export class AuthService {
-  public base = 'http://localhost:3000';
+  public base = 'http://localhost/';
   public user: any = {};
   constructor(private http: HttpClient, public fbAuth: AngularFireAuth) {
     this.fbAuth.authState.subscribe( user => {

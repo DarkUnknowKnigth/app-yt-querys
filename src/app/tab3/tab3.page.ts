@@ -14,7 +14,7 @@ export class Tab3Page {
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
-  base = 'http://localhost:3000';
+  base = 'http://localhost/';
   player: Howl = null;
   playingSong: any = {}
   isPlaying = false;
