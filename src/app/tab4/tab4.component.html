@@ -15,8 +15,8 @@
 
    <ion-card>
     <ion-card-header>
-      <ion-card-title>Crear Cuenta</ion-card-title>
-      <ion-card-subtitle>Cuenta en YT-App</ion-card-subtitle>
+      <ion-card-title>Sign in</ion-card-title>
+      <ion-card-subtitle>YT-Downloader Account</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -36,13 +36,42 @@
           <ion-label position="floating">Email</ion-label>
           <ion-input placeholder="email"></ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label position="floating">password</ion-label>
+          <ion-input type="password" placeholder="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">confirm password</ion-label>
+          <ion-input type="password" placeholder="confirm-password"></ion-input>
+        </ion-item>
       </ion-list>
       <ion-button expand="block">
-        <ion-label>Registrarme</ion-label> 
+        <ion-label>Sing up</ion-label> 
       </ion-button>
       <ion-button expand="block" (click)="loginG()">
         <ion-icon name="logo-google"></ion-icon>
         <ion-label style="margin-left:20px;">Registar con Google</ion-label> 
+      </ion-button>
+    </ion-card-content>
+   </ion-card>
+   <ion-card>
+    <ion-card-header>
+      <ion-card-title>Login</ion-card-title>
+      <ion-card-subtitle>Cuenta en YT-App</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Name</ion-label>
+          <ion-input placeholder="Name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input placeholder="email"></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="block">
+        <ion-label>Login</ion-label> 
       </ion-button>
     </ion-card-content>
    </ion-card>

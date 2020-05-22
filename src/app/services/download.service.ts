@@ -26,4 +26,10 @@ export class DownloadService {
   delete(id: string){
     return this.http.delete(`${this.authsv.base}/videos/${id}`);
   }
+  save(filePath: string, resolution: string){
+    window.open(`${this.authsv.base}/yt${filePath}&resolution=${resolution}`,'_blank');
+  }
+  getApiUrl(){
+    return this.authsv.base;
+  }
 }

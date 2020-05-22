@@ -14,7 +14,7 @@ export class Tab3Page {
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
-  base = 'http://localhost/';
+  base ='';
   player: Howl = null;
   playingSong: any = {}
   isPlaying = false;
@@ -40,6 +40,7 @@ export class Tab3Page {
     }, err => {
       console.error(err);
     });
+    this.base = this.dwlsv.getApiUrl();
   }
   shoudlPlay(){
     const id = this.route.snapshot.queryParams.id;
@@ -128,7 +129,7 @@ export class Tab3Page {
     },1000);
   }
   download(file: any,type: string){
-    window.open(`${this.base}/yt${file.pathDownload}&resolution=${this.resolution}`,'_blank');
+    this.dwlsv.save(file.pathDownload, this.resolution);
   }
   deleteVideo(video: any){
     this.dwlsv.delete(video.id).subscribe( resp => {
