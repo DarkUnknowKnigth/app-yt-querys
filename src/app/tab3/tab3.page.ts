@@ -14,6 +14,7 @@ export class Tab3Page {
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
+  showing: string;
   base ='';
   player: Howl = null;
   playingSong: any = {}
@@ -22,6 +23,7 @@ export class Tab3Page {
   displayProgress = '';
   @ViewChild('range') range:IonRange;
   constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService) {
+    this.showing='songs';
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
       this.songsv.currentSongs.subscribe( songs => {
@@ -65,7 +67,11 @@ export class Tab3Page {
       }
     }
   }
+  show(view :string){
+    this.showing = view;
+  }
   start(song: any){
+    this.showing='player'
     if(this.player){
       this.player.stop();
     }

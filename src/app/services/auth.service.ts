@@ -7,30 +7,36 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  public isAuth = false;
   public base = 'http://localhost:3000';
-  public user: any = {};
   public soureceAuth = new BehaviorSubject<any>({});
   public authStatus = this.soureceAuth.asObservable();
   constructor(private http: HttpClient, public fbAuth: AngularFireAuth) {
-    this.fbAuth.authState.subscribe( user => {
-      console.log(user);
-      if(!user){return;}
-      this.user.uid = user.uid;
-      this.user.name = user.displayName;
-      this.user.email = user.email;
-      this.user.photo = user.photoURL;
-    });
+    const user = JSON.parse(localStorage.getItem('__TYD_USER__'));
+    if(user){
+      this.setAuthStatus(user);
+    }
   }
   setAuthStatus(newAuth: any){
+    this.isAuth = newAuth != null;
+    localStorage.setItem('__TYD_USER__', JSON.stringify(newAuth));
     this.soureceAuth.next(newAuth);
+  }
+  uploadPhoto(file: any, id: string){
+    const data = new FormData();
+    data.append('photo', file);
+    return this.http.post(`${this.base}/photo/${id}`, data);
   }
   register(data: any){
     return this.http.post(`${this.base}/register`, data);
   }
   login(e: string, p: string){
+    localStorage.setItem('email',e);
     return this.http.post(`${this.base}/login`,{email:e, password:p});
   }
   logout(){
+    this.setAuthStatus(null);
+    localStorage.removeItem('__TYD_USER__');
     return this.http.get(`${this.base}/logout`);
   }
   loginGoogle(){

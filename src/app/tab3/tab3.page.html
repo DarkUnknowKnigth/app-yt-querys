@@ -1,7 +1,22 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="primary">
+      <ion-button (click)="show('player')">
+        Player<ion-icon slot="end" name="play-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="show('songs')">
+        Music<ion-icon slot="end" name="musical-notes-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="show('videos')">
+        Video Stored<ion-icon slot="end" name="server-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>
-      YT-Download / Music
+      YT-Download / Player
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,7 +27,8 @@
       <ion-title size="large">Player</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div class="player-wrapper">
+  <!-- Audio Player -->
+  <div class="player-wrapper" *ngIf="showing=='player'">
     <img [src]="playingSong.imagePath" *ngIf="playingSong.id" (click)="togglePlayer(isPlaying)" class="notMobile touchable">
     <ion-toolbar class="notMobile" *ngIf="playingSong.id">
       <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
@@ -42,9 +58,10 @@
       </ion-grid>
     </ion-toolbar>
   </div>
+  <!-- Audio player mobile -->
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md *ngIf="playingSong.id" class="mobile">
+      <ion-col size="12" size-md *ngIf="playingSong.id && showing=='player'" class="mobile">
         <ion-card>
           <ion-img [src]="playingSong.imagePath?playingSong.imagePath:'/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable">
           </ion-img>
@@ -84,7 +101,8 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-      <ion-col size="12">
+      <ion-col size="12" *ngIf="showing=='songs'">
+        <!-- List of songs downloaded -->
         <ion-list>
           <ion-list-header class="ion-text-center"><h1>Downloaded songs</h1></ion-list-header>
           <ion-item>
@@ -101,17 +119,18 @@
             <ion-item>
               <ion-label color="success" class="notMobile">On server</ion-label>
               <ion-label color="success" class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
-              <ion-button slot="end" color="success">
+              <ion-button slot="end" color="light">
                 <ion-label>{{song.duration}}</ion-label>
               </ion-button>
-              <ion-button slot="end" color="light" size="small"  (click)="start(song)"><ion-icon name="play-outline"></ion-icon></ion-button>
-              <ion-button slot="end" color="light" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="success" size="small"  (click)="start(song)"><ion-icon name="play-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="tertiary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" size="small" (click)="delete(song)"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </ion-list>
       </ion-col>
-      <ion-col size="12">
+      <!-- List of videos downloaded -->
+      <ion-col size="12" *ngIf="showing=='videos'">
         <ion-list>
           <ion-list-header class="ion-text-center"><h1>Active Videos</h1></ion-list-header>
           <ion-item>
@@ -139,10 +158,10 @@
             <ion-item>
               <ion-label color="success" class="notMobile">Avalible to download</ion-label>
               <ion-label color="success" class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
-              <ion-button slot="end" color="success">
+              <ion-button slot="end" color="light">
                 <ion-label>{{video.duration}}</ion-label>
               </ion-button>
-              <ion-button slot="end" color="light" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="tertiary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" size="small" (click)="deleteVideo(video)"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>

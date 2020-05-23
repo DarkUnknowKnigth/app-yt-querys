@@ -16,30 +16,31 @@
    <ion-card>
     <ion-item>
       <ion-thumbnail slot="start">
-        <img src="/assets/images/song.png">
+        <ion-img [src]="user?'http://localhost:3000'+user.photo:'/assets/images/song.png'"></ion-img>
       </ion-thumbnail>
-      <ion-label> {{auth.user.uid ? auth.user.name : 'Name'}}</ion-label>
+      <ion-label> {{user ? user.name : 'Name'}}</ion-label>
     </ion-item>
-    <ion-card-header>
-      <ion-card-title>Datos de usuario</ion-card-title>
-      <ion-card-subtitle>Tipo de autentificacion</ion-card-subtitle>
-    </ion-card-header>
     <ion-card-content>
       <ion-list>
         <ion-item>
           <ion-label position="floating">Name</ion-label>
-          <ion-input placeholder="Name"></ion-input>
+          <ion-input placeholder="Name" value="{{user.name}}"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">email</ion-label>
-          <ion-input placeholder="email"></ion-input>
+          <ion-input placeholder="email" value="{{user.email}}"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-button slot="start" color="tertiary" size="medium">
+            <ion-icon name="save" slot="start"></ion-icon>
+            <ion-label>Guardar</ion-label> 
+          </ion-button>
+          <ion-button slot="end" color="danger" size="medium" (click)="logout()">
+            <ion-icon name="log-out-outline" slot="start"></ion-icon>
+            <ion-label>Logout</ion-label> 
+          </ion-button>
         </ion-item>
       </ion-list>
-      <ion-button expand="block" color="tertiary">
-        <ion-icon name="save"></ion-icon>
-        <ion-label>Guardar</ion-label> 
-      </ion-button>
     </ion-card-content>
    </ion-card>
-  
 </ion-content>

@@ -1,7 +1,7 @@
 <ion-tabs>
 
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="account">
+    <ion-tab-button tab="account" *ngIf="authsv.isAuth">
       <ion-icon name="person-circle-outline"></ion-icon>
       <ion-label>Account</ion-label>
     </ion-tab-button>
@@ -16,10 +16,9 @@
       <ion-label>Play</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="login">
+    <ion-tab-button tab="login" *ngIf="!authsv.isAuth">
       <ion-icon name="log-in-outline"></ion-icon>
-      <ion-label>Sing in</ion-label>
+      <ion-label>Sign in</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
-
 </ion-tabs>
