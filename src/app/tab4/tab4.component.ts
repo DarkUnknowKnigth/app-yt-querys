@@ -65,7 +65,6 @@ export class Tab4Component implements OnInit {
       console.log(err);
       this.toastsv.presentToast('Account not created 🙂');
     });
-    console.log(this.data);
   }
   login (form :any) {
     if(form.invalid){
