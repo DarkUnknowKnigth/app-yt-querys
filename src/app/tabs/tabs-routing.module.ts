@@ -25,14 +25,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/account',
+        redirectTo: '/tabs/download',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/account',
+    redirectTo: '/tabs/download',
     pathMatch: 'full'
   }
 ];
