@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AuthService {
   public isAuth = false;
-  public base = 'http://localhost:3000';
+  public base = 'https://y2b-downloader.herokuapp.com';
   public soureceAuth = new BehaviorSubject<any>({});
   public authStatus = this.soureceAuth.asObservable();
   constructor(private http: HttpClient, public fbAuth: AngularFireAuth) {

@@ -14,7 +14,7 @@ export class Tab4Component implements OnInit {
     email:'',
     password:'',
     cpassword:'',
-    file: ''
+    file: null
   };
   log = {
     email:'',
