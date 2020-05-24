@@ -71,7 +71,6 @@ export class Tab3Page {
     this.showing = view;
   }
   start(song: any){
-    this.showing='player'
     if(this.player){
       this.player.stop();
     }

@@ -1,10 +1,5 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-buttons slot="primary">
-      <ion-button (click)="show('player')">
-        Player<ion-icon slot="end" name="play-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
     <ion-buttons slot="secondary">
       <ion-button (click)="show('songs')">
         Music<ion-icon slot="end" name="musical-notes-outline"></ion-icon>
@@ -28,7 +23,7 @@
     </ion-toolbar>
   </ion-header>
   <!-- Audio Player -->
-  <div class="player-wrapper" *ngIf="showing=='player'">
+  <div class="player-wrapper">
     <img [src]="playingSong.imagePath" *ngIf="playingSong.id" (click)="togglePlayer(isPlaying)" class="notMobile touchable">
     <ion-toolbar class="notMobile" *ngIf="playingSong.id">
       <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
@@ -61,7 +56,7 @@
   <!-- Audio player mobile -->
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-md *ngIf="playingSong.id && showing=='player'" class="mobile">
+      <ion-col size="12" size-md *ngIf="playingSong.id" class="mobile">
         <ion-card>
           <ion-img [src]="playingSong.imagePath?playingSong.imagePath:'/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable">
           </ion-img>
@@ -122,7 +117,10 @@
               <ion-button slot="end" color="light">
                 <ion-label>{{song.duration}}</ion-label>
               </ion-button>
-              <ion-button slot="end" color="success" size="small"  (click)="start(song)"><ion-icon name="play-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="success" size="small"  (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
+                <ion-icon name="play-outline" *ngIf="playingSong.id !== song.id"></ion-icon>
+                <ion-icon name="pause-outline" *ngIf="playingSong.id === song.id"></ion-icon>
+              </ion-button>
               <ion-button slot="end" color="tertiary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" size="small" (click)="delete(song)"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>

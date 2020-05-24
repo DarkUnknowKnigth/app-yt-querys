@@ -27,7 +27,8 @@ export class Tab2Page {
       return;
     }
     if (this.url.includes('v=')) {
-      const id =this.url.slice(this.url.search(/[v=]/)+2)
+      const id =this.url.slice(this.url.search(/[v=]/)+2);
+      console.log('from pc:::'+ id);
       if(id.length === 11){
         if(this.type === 'audio'){
           this.toastsv.presentToast('Downloading');
@@ -62,6 +63,39 @@ export class Tab2Page {
         this.downloading=false;
         this.downloaded = true;
         return;
+      }
+    }
+    else if(this.url.split('/').pop().length === 11)
+    {
+      const id = this.url.split('/').pop();
+      console.log('from device:::'+ id);
+      if(this.type === 'audio'){
+        this.toastsv.presentToast('Downloading');
+        this.dwlsv.downloadAudio(id).subscribe( resp => {
+          this.songsv.updateSongsList(resp['songs']);
+          this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
+          this.downloading=false;
+          this.downloaded = true;
+          this.router.navigateByUrl('/tabs/player?id='+id);
+        }, err =>{
+          this.toastsv.presentToastWithOptions('Error', JSON.stringify(err));
+          this.downloading=false;
+          this.downloaded = true;
+        });
+      }
+      if(this.type === 'video'){
+        this.toastsv.presentToast('Downloading');
+        this.dwlsv.downloadVideo(id,this.resolution).subscribe( resp => {
+          this.dwlsv.updateVideoList(resp['videos']);
+          this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩' + resp['message']);
+          this.router.navigateByUrl('/tabs/player?id='+resp['video'].id+'&download=1');
+          this.downloading=false;
+          this.downloaded = true;
+        }, err =>{
+          this.toastsv.presentToastWithOptions('Error', JSON.stringify(err));
+          this.downloading=false;
+          this.downloaded = true;
+        });
       }
     }
     else{
