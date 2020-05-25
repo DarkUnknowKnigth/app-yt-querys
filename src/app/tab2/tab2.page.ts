@@ -27,7 +27,14 @@ export class Tab2Page {
       return;
     }
     if (this.url.includes('v=')) {
-      const id =this.url.slice(this.url.search(/[v=]/)+2);
+      let id = '';
+      if(this.url.includes('list=')){
+        const temp= this.url.split('&list')[0];
+        id = temp.slice(this.url.search(/[v=]/)+2,);
+      }
+      else{
+        id = this.url.slice(this.url.search(/[v=]/)+2,);
+      }
       console.log('from pc:::'+ id);
       if(id.length === 11){
         if(this.type === 'audio'){
@@ -64,8 +71,7 @@ export class Tab2Page {
         this.downloaded = true;
         return;
       }
-    }
-    else if(this.url.split('/').pop().length === 11)
+    }else if(this.url.split('/').pop().length === 11)
     {
       const id = this.url.split('/').pop();
       console.log('from device:::'+ id);
@@ -97,9 +103,8 @@ export class Tab2Page {
           this.downloaded = true;
         });
       }
-    }
-    else{
-      this.toastsv.presentToastWithOptions('Error !!! 😪','Your URL is wrong 🙄');
+    }else{
+      this.toastsv.presentToastWithOptions('Error !!! 😪','Your URL(from Device) is wrong 🙄');
       this.downloading =false;
       this.downloaded = true;
       return;

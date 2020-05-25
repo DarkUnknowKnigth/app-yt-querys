@@ -22,40 +22,42 @@
       <ion-title size="large">Player</ion-title>
     </ion-toolbar>
   </ion-header>
-  <!-- Audio Player -->
-  <div class="player-wrapper">
-    <img [src]="playingSong.imagePath" *ngIf="playingSong.id" (click)="togglePlayer(isPlaying)" class="notMobile touchable">
-    <ion-toolbar class="notMobile" *ngIf="playingSong.id">
-      <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
-        <ion-label style="margin-left:0px; width:400px">{{playingSong.artist}} - {{playingSong.title}}</ion-label>
-        <ion-label style="margin-left:10%;">{{displayProgress}}</ion-label>
-      </ion-title>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="8">
-            <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="prev()">
-              <ion-icon name="play-skip-back-outline"></ion-icon>
-            </ion-button>
-            <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="togglePlayer(isPlaying)" >
-              <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
-              <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
-            </ion-button>
-            <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="next()">
-              <ion-icon name="play-skip-forward-outline"></ion-icon>
-            </ion-button>
-          </ion-col>
-          <ion-col size="4"  class="ion-margin-top">
-            <ion-item>
-              <ion-range color="dark" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-toolbar>
-  </div>
-  <!-- Audio player mobile -->
   <ion-grid>
     <ion-row>
+      <ion-col size="12" size-md *ngIf="playingSong.id" class="notMobile">
+        <!-- Audio Player -->
+        <div class="player-wrapper" >
+          <ion-img [src]="playingSong.imagePath" (click)="togglePlayer(isPlaying)" class="touchable img-player" width="200px"></ion-img>
+          <ion-toolbar class="notMobile" *ngIf="playingSong.id">
+            <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
+              <ion-label style="margin-left:0px; width:400px">{{playingSong.artist}} - {{playingSong.title}}</ion-label>
+              <ion-label style="margin-left:10%;">{{displayProgress}}</ion-label>
+            </ion-title>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="8">
+                  <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="prev()">
+                    <ion-icon name="play-skip-back-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="togglePlayer(isPlaying)" >
+                    <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
+                    <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="next()">
+                    <ion-icon name="play-skip-forward-outline"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <ion-col size="4"  class="ion-margin-top">
+                  <ion-item>
+                    <ion-range color="dark" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-toolbar>
+        </div>
+      <!-- Audio player mobile -->
+      </ion-col>
       <ion-col size="12" size-md *ngIf="playingSong.id" class="mobile">
         <ion-card>
           <ion-img [src]="playingSong.imagePath?playingSong.imagePath:'/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable">

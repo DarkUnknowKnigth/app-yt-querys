@@ -3,8 +3,8 @@
     width: 100%;
 }
 .player-wrapper{
-    position: sticky;
-    bottom: 1;
+   width: 70%;
+   margin: auto;
 }
 .player{
     display: flex;
@@ -14,7 +14,7 @@
     width: 30%;
 }
 .display-player{
-    width: 40%;
+    width: 30%;
     margin: 0;
 }
 .display-list{
