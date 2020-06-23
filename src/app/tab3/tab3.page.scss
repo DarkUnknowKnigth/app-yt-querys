@@ -2,13 +2,28 @@
     text-align: center;
     width: 100%;
 }
+.bg-wrapper{
+    margin: 5px;
+    background-color: #1F1F1F ;
+}
 .player-wrapper{
-   width: 70%;
-   margin: auto;
+    display: flex;
+    margin: auto;
 }
 .player{
     display: flex;
+    width: 100%;
     background-color:#121212;
+}
+.cover-player {
+    position: relative;
+    margin: 0 1rem;
+    width: 100%;
+}
+.controls-player{
+    position: relative;
+    margin: 0;
+    width: 100%;
 }
 .btn-player{
     width: 30%;
@@ -54,6 +69,7 @@
     }
     .mobile{
         display: flex;
+        width: 100%;
     }
     .btn-player{
         width: 100%;

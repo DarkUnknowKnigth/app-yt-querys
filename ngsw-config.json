@@ -3,7 +3,7 @@
   "index": "/index.html",
   "assetGroups": [
     {
-      "name": "YT-Downloader",
+      "name": "DWN-Tube",
       "installMode": "prefetch",
       "resources": {
         "files": [

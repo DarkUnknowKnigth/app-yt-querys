@@ -1,13 +1,15 @@
 .loading{
     margin: 0;
-    width: 70%;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }
 .center{
     margin-top: 1rem;
     margin-left: 2rem;
     margin-right: 2rem;
     display: flex;
-  justify-content: center;
+    justify-content: center;
 }
 ion-card {
     height: 97%;

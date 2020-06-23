@@ -78,11 +78,16 @@ export class Tab4Component implements OnInit {
     }
     if(this.log.password.length === 8 && this.log.email.length>0){
       this.auth.login(this.log.email,this.log.password).subscribe( resp => {
-        console.log(resp);
         if(resp['user']){
-          this.auth.setAuthStatus(resp['user']);
+          const user = resp['user'];
+          user.session = resp['session'];
+          this.auth.setAuthStatus(user);
           this.log.password='';
           this.router.navigateByUrl('/tabs/player');
+        }else{
+          if(resp['error']){
+            this.toastsv.presentToast(resp['error'].error);
+          }
         }
       }, err => {
         console.log(err);

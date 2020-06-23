@@ -39,17 +39,17 @@
             <ion-select-option value="360">360p</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item>
+        <ion-item lines="none">
           <ion-button slot="end" size="medium" color="tertiary" (click)="download()" [disabled]="!downloaded">
             <ion-icon slot="start" name="download"></ion-icon>
-            <ion-label>Download </ion-label> 
+            <ion-label>Download</ion-label> 
           </ion-button>
         </ion-item>
       </ion-list>
       <ion-grid *ngIf="downloading">
         <ion-row class="ion-text-center">
-          <ion-col size=12>
-            <h1>Downloading</h1>
+          <ion-col size="12">
+            <ion-label>Saving & Converting ...</ion-label>
           </ion-col>
           <ion-col size="12">
             <img src="/assets/images/loading.gif" alt="loading" class="loading">

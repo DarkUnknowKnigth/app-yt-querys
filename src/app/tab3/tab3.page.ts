@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnChanges, SimpleChange } from '@angular/core';
+import { Component, ViewChild, ElementRef} from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
 import { IonRange } from '@ionic/angular';
@@ -16,13 +16,17 @@ export class Tab3Page {
   resolution = '480';
   showing: string;
   base ='';
+  searchSongs: any[] = [];
+  searchVideos: any[] = [];
   player: Howl = null;
   playingSong: any = {}
   isPlaying = false;
   progress;
+  querySong: string;
+  queryVideo: string;
   displayProgress = '';
   @ViewChild('range') range:IonRange;
-  constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService) {
+  constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
     this.showing='songs';
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
@@ -44,13 +48,20 @@ export class Tab3Page {
     });
     this.base = this.dwlsv.getApiUrl();
   }
+  searchSong(){
+    this.searchSongs = this.songs.filter(song => song.title.toLowerCase().includes(this.querySong));
+  }
+  searchVideo(){
+    this.searchVideos = this.videos.filter(video => video.title.toLowerCase().includes(this.queryVideo));
+  }
   shoudlPlay(){
     const id = this.route.snapshot.queryParams.id;
     const download = this.route.snapshot.queryParams.download;
     if (id !== undefined) {
       if (id.length === 11 && download === undefined) {
         const songQuery = this.songs.filter( song => song.id === id );
-        if (songQuery.length > 0) {
+        console.log(songQuery);
+        if (songQuery.length > 0 && !this.isPlaying) {
           this.isPlaying = true;
           this.start(songQuery[0]);
         }
@@ -71,6 +82,7 @@ export class Tab3Page {
     this.showing = view;
   }
   start(song: any){
+    this.show('player');
     if(this.player){
       this.player.stop();
     }
@@ -89,6 +101,9 @@ export class Tab3Page {
         }else{
           this.start(this.songs[0]);
         }
+      },
+      onloaderror: (e)=>{
+        console.log(e);
       }
     });
     this.player.play();
@@ -121,6 +136,14 @@ export class Tab3Page {
     const newValue =+  this.range.value;
     const duration = this.player.duration();
     this.player.seek(duration * newValue / 100);
+  }
+  seekMore(){
+    const now = this.player.seek();
+    this.player.seek(now+10);
+  }
+  seekLess(){
+    const now = this.player.seek();
+    this.player.seek(now-10);
   }
   updateProgress(){
     const seek = this.player.seek();

@@ -72,20 +72,22 @@
          </ion-item>
          <ion-item>
            <ion-label position="floating">Password</ion-label>
-           <ion-input placeholder="Password" type="password" [(ngModel)]="log.password" name="password" required minlength="8"></ion-input>
+           <ion-input placeholder="Password" type="password" [(ngModel)]="log.password" name="password" required minlength="8" maxlength="8"></ion-input>
          </ion-item>
          <ion-item>
-          <ion-button slot="start" color="tertiary" size="medium" type="submit">
+          <ion-button slot="start" color="tertiary" size="medium" type="submit" [disabled]="formLogin.invalid">
             <ion-label>Login</ion-label> 
-          </ion-button>
-          <ion-button color="primary" size="medium" (click)="loginG()" type="button" disabled>
-            <ion-icon name="logo-google"></ion-icon>
-            <ion-label style="margin-left:20px;">Login</ion-label> 
           </ion-button>
           <ion-button slot="end" color="tertiary" size="medium" type="button" (click)="isLogin = false">
             <ion-label>Register</ion-label> 
           </ion-button>
          </ion-item>
+         <!-- <ion-item>
+          <ion-button color="primary" size="medium" (click)="loginG()" type="button" disabled>
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+            <ion-label>Login</ion-label> 
+          </ion-button>
+         </ion-item> -->
        </ion-list>
      </ion-card-content>
     </ion-card>

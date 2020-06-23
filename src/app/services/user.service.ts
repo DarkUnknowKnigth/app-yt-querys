@@ -14,7 +14,7 @@ export class UserService {
   get(id: string){
     return this.http.get(`${this.authsv.base}/users/${id}`)
   }
-  update(id: string,data: any){
+  update(id: string, data: any){
     return this.http.put(`${this.authsv.base}/users/${id}`, data);
   }
   delete(id: string){
