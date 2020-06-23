@@ -62,14 +62,14 @@
             <ion-grid>
               <ion-row class="ion-align-items-center">
                 <ion-col size="2" class="ion-text-center">
-                  {{playingSong.duration}}
+                  {{displayProgress}}
                 </ion-col>
                 <ion-col size="2" class="ion-text-center">
                   <ion-button class="btn-player" fill="clear" color="dark" (click)="prev()">
                     <ion-icon name="play-skip-back-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center">
+                <ion-col size="4" class="ion-text-center">
                   <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="togglePlayer(isPlaying)" >
                     <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
                     <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
@@ -81,12 +81,10 @@
                   </ion-button>
                 </ion-col>
                 <ion-col size="2" class="ion-text-center">
-                  {{displayProgress}}
+                  {{playingSong.duration}}
                 </ion-col>
                 <ion-col size="12" class="ion-margin-top">
-                  <ion-item>
-                    <ion-range color="tertiary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
-                  </ion-item>
+                  <ion-range color="tertiary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -213,9 +211,10 @@
 </ion-content>
 <ion-footer *ngIf="showing !== 'player'">
   <ion-toolbar>
-    <ion-title (click)="show('player')">
+    <ion-progress-bar color="primary" [value]="progress*0.01" color="tertiary" class="progress-mini"></ion-progress-bar>
+    <ion-title>
       <ion-item-sliding>
-        <ion-item>
+        <ion-item (click)="show('player')" class="touchable">
           <img [src]="playingSong.imagePath" width="80" height="100%" style="margin: 0 1rem;" class="notMobile">
           <ion-label>{{playingSong.title ? playingSong.title : 'Player 🔈' }}</ion-label>
         </ion-item>
