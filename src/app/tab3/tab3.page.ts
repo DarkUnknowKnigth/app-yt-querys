@@ -26,7 +26,7 @@ export class Tab3Page {
   queryVideo: string;
   displayProgress = '';
   @ViewChild('range') range:IonRange;
-  constructor(private songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
+  constructor(public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
     this.showing='songs';
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
@@ -78,11 +78,14 @@ export class Tab3Page {
       }
     }
   }
+  bigCover(){
+    const regex = /hqdefault/gi;
+    return this.playingSong.imagePath.replace(regex,'maxresdefault');
+  }
   show(view :string){
     this.showing = view;
   }
   start(song: any){
-    this.show('player');
     if(this.player){
       this.player.stop();
     }
@@ -114,6 +117,7 @@ export class Tab3Page {
       this.player.pause();
     } else {
       this.player.play();
+      this.show('player');
     }
   }
   prev(){
