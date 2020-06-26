@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
+    <ion-title  color="tertiary">
     YT-Download / Account
     </ion-title>
   </ion-toolbar>
@@ -9,46 +9,40 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Cuenta</ion-title>
+      <ion-title  color="tertiary" size="large">Account</ion-title>
     </ion-toolbar>
   </ion-header>
-
-   <ion-card>
-    <ion-item>
+  <ion-list>
+    <ion-item lines="none">
       <ion-thumbnail slot="start">
         <ion-img [src]="user ? auth.base + user.photo:'/assets/images/song.png'"></ion-img>
       </ion-thumbnail>
       <ion-label> {{user ? user.name : 'Name'}}</ion-label>
     </ion-item>
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-button color="tertiary" size="default" (click)="save(img)">
-            <ion-icon name="duplicate-outline"></ion-icon>
-            <ion-label>Unpload Profile</ion-label>
-          </ion-button>
-          <ion-label  class="is-mobile">{{data.file && data.file.name? 'Selected' : 'Choose one'}}</ion-label>
-          <input type="file" accept="image/*" style="display: none" (change)="onFileChanged($event)"  #img name="file">
-        </ion-item> 
-        <ion-item>
-          <ion-label position="floating">Name</ion-label>
-          <ion-input placeholder="Name" [(ngModel)]="data.name"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">email</ion-label>
-          <ion-input placeholder="email" [(ngModel)]="data.email"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-button slot="start" color="tertiary" size="medium" (click)="update()">
-            <ion-icon name="save" slot="start"></ion-icon>
-            <ion-label>Guardar</ion-label> 
-          </ion-button>
-          <ion-button slot="end" color="danger" size="medium" (click)="logout()">
-            <ion-icon name="log-out-outline" slot="start"></ion-icon>
-            <ion-label>Logout</ion-label> 
-          </ion-button>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-   </ion-card>
+    <ion-item lines="none">
+      <ion-button size="medium" color="tertiary" (click)="save(img)" >
+        <ion-icon name="duplicate-outline" slot="start"></ion-icon>
+        <ion-label  class="is-mobile">{{data.file && data.file.name? 'Selected' : 'Add a photo'}}</ion-label>
+      </ion-button>
+      <input type="file" accept="image/*" style="display: none" (change)="onFileChanged($event)"  #img name="file">
+    </ion-item> 
+    <ion-item lines="insert">
+      <ion-label position="floating">Name</ion-label>
+      <ion-input placeholder="Name" [(ngModel)]="data.name"></ion-input>
+    </ion-item>
+    <ion-item lines="insert">
+      <ion-label position="floating">email</ion-label>
+      <ion-input placeholder="email" [(ngModel)]="data.email"></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-button size="medium" slot="start" color="tertiary" (click)="update()">
+        <ion-icon name="save" slot="start"></ion-icon>
+        <ion-label>Guardar</ion-label> 
+      </ion-button>
+      <ion-button size="medium" slot="end" color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        <ion-label>Logout</ion-label> 
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

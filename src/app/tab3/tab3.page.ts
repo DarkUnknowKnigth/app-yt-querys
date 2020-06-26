@@ -22,8 +22,8 @@ export class Tab3Page {
   playingSong: any = {}
   isPlaying = false;
   progress;
-  querySong: string;
-  queryVideo: string;
+  querySong = '';
+  queryVideo = '';
   displayProgress = '';
   @ViewChild('range') range:IonRange;
   constructor(public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
@@ -117,7 +117,6 @@ export class Tab3Page {
       this.player.pause();
     } else {
       this.player.play();
-      this.show('player');
     }
   }
   prev(){
@@ -148,6 +147,10 @@ export class Tab3Page {
   seekLess(){
     const now = this.player.seek();
     this.player.seek(now-10);
+  }
+  random(){
+    const track = Math.floor(Math.random() * this.songs.length);
+    this.start(this.songs[track]);
   }
   updateProgress(){
     const seek = this.player.seek();
