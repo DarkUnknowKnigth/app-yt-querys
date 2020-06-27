@@ -15,7 +15,7 @@
   <ion-list>
     <ion-item lines="none">
       <ion-thumbnail slot="start">
-        <ion-img [src]="user ? auth.base + user.photo:'/assets/images/song.png'"></ion-img>
+        <ion-img [src]="user ? user.photo:'/assets/images/song.png'"></ion-img>
       </ion-thumbnail>
       <ion-label> {{user ? user.name : 'Name'}}</ion-label>
     </ion-item>

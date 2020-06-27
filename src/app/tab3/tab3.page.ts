@@ -90,7 +90,7 @@ export class Tab3Page {
       this.player.stop();
     }
     this.player = new Howl({
-      src:[this.base+song.path],
+      src:[song.path],
       html5:true,
       onplay:() => {
         this.isPlaying = true;
