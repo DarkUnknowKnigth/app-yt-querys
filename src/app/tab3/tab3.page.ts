@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
 import { IonRange } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { DownloadService } from '../services/download.service';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page {
+export class Tab3Page{
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
@@ -28,22 +28,22 @@ export class Tab3Page {
   @ViewChild('range') range:IonRange;
   constructor(public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
     this.showing='songs';
+    this.songsv.currentSongs.subscribe( songs => {
+      this.songs = songs;
+      this.shoudlPlay();
+    });
+    this.dwlsv.currentVideos.subscribe( videos  => {
+      this.videos = videos;
+      this.shoudlPlay();
+    });
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
-      this.songsv.currentSongs.subscribe( songs => {
-        this.songs = songs;
-        this.shoudlPlay();
-      });
-      this.dwlsv.all().subscribe( resp => {
-        this.dwlsv.updateVideoList(resp['videos']);
-        this.dwlsv.currentVideos.subscribe( videos  => {
-          this.videos = videos;
-          this.shoudlPlay();
-        });
-      }, err =>{
-        console.error(err);
-      });
     }, err => {
+      console.error(err);
+    });
+    this.dwlsv.all().subscribe( resp => {
+      this.dwlsv.updateVideoList(resp['videos']);
+    }, err =>{
       console.error(err);
     });
     this.base = this.dwlsv.getApiUrl();
@@ -60,7 +60,6 @@ export class Tab3Page {
     if (id !== undefined) {
       if (id.length === 11 && download === undefined) {
         const songQuery = this.songs.filter( song => song.id === id );
-        console.log(songQuery);
         if (songQuery.length > 0 && !this.isPlaying) {
           this.isPlaying = true;
           this.start(songQuery[0]);

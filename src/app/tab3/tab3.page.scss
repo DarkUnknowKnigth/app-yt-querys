@@ -16,10 +16,11 @@
 }
 .full {
   position: absolute;
-  top: 90vh;
+  top: 0;
   left: 0;
   width: 100% !important;
-  transform: translateY(-90%);
+  height: 30vh !important;
+  transform: translateY(60vh);
   padding: 0;
   margin: 0;
 }
@@ -69,11 +70,12 @@
 }
 @media only screen and (max-width: 700px) {
   .full {
-    position: relative;
-    top: 80vh;
-    transform: translateY(-100%);
+    position: fixed;
+    top:0;
     left: 0;
     margin: 0;
+    height: 40vh !important;
+    transform: translateY(30vh);
   }
   .container {
     display: block;
@@ -84,7 +86,7 @@
     width: 170vh;
     /* Set up proportionate scaling */
     height: 100vh;
-    transform: translateX(-70vh);
+    transform: translateX(-80vh);
     /* Set up positioning */
     position: fixed;
     top: 0;
@@ -121,7 +123,4 @@ ion-select {
 }
 ion-button{
   --box-shadow:none;
-}
-.little-down{
-  transform: translateY( 5px );
 }

@@ -3,6 +3,7 @@ import { DownloadService } from '../services/download.service';
 import { ToastService } from '../toast.service';
 import { Router } from '@angular/router';
 import { SongService } from '../services/song.service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-tab2',
@@ -10,8 +11,8 @@ import { SongService } from '../services/song.service';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-  url: string;
-  type: string;
+  url = '';
+  type = '';
   resolution:string;
   downloading = false;
   downloaded = true;
@@ -35,17 +36,22 @@ export class Tab2Page {
       else{
         id = this.url.slice(this.url.search(/[v=]/)+2,);
       }
-      console.log('from pc:::'+ id);
+      // console.log('from pc:::'+ id);
       if(id.length === 11){
         if(this.type === 'audio'){
           this.toastsv.presentToast('Downloading');
           this.dwlsv.downloadAudio(id).subscribe( resp => {
-            this.songsv.updateSongsList(resp['songs']);
-            this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
-            this.downloading=false;
-            this.downloaded = true;
-            this.router.navigateByUrl('/tabs/player?id='+id);
+            if(resp['songs'] && resp['songs'].length > 0){
+              this.songsv.updateSongsList(resp['songs']);
+              this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
+              this.downloading=false;
+              this.downloaded = true;
+              this.router.navigateByUrl('/tabs/player?id='+id);
+            }else{
+              this.toastsv.presentToastWithOptions('Something Wrong',JSON.stringify(resp));
+            }
           }, err =>{
+            console.log(err);
             this.toastsv.presentToastWithOptions('Error', JSON.stringify(err));
             this.downloading=false;
             this.downloaded = true;
@@ -74,16 +80,21 @@ export class Tab2Page {
     }else if(this.url.split('/').pop().length === 11)
     {
       const id = this.url.split('/').pop();
-      console.log('from device:::'+ id);
+      // console.log('from device:::'+ id);
       if(this.type === 'audio'){
         this.toastsv.presentToast('Downloading');
         this.dwlsv.downloadAudio(id).subscribe( resp => {
-          this.songsv.updateSongsList(resp['songs']);
-          this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
-          this.downloading=false;
-          this.downloaded = true;
-          this.router.navigateByUrl('/tabs/player?id='+id);
+          if(resp['songs'] && resp['songs'].length >0){
+            this.songsv.updateSongsList(resp['songs']);
+            this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
+            this.downloading=false;
+            this.downloaded = true;
+            this.router.navigateByUrl('/tabs/player?id='+id);
+          }else{
+            this.toastsv.presentToastWithOptions('Something Wrong',JSON.stringify(resp));
+          }
         }, err =>{
+          console.log(err);
           this.toastsv.presentToastWithOptions('Error', JSON.stringify(err));
           this.downloading=false;
           this.downloaded = true;
