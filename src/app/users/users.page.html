@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title slot="end" color="tertiary" size="large">
+      <ion-icon name="people-outline"></ion-icon> 
+      <ion-label>
+        Users
+      </ion-label>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+   <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title  color="tertiary" size="large">Users</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-list>
+    <ion-item *ngFor="let user of users" lines="full">
+      <ion-label slot="start">
+        {{user.name}} 
+      </ion-label>
+      <ion-button slot="end" color="danger" *ngIf="user.role==666">
+        <ion-icon slot="icon-only" name="glasses" size="large"></ion-icon>
+      </ion-button>
+      <ion-button color="danger" slot="end" size="small" (click)="deleteUser(user)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

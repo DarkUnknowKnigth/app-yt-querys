@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('../tab4/tab4.module').then(m => m.Tab4PageModule)
       },
       {
+        path: 'users',
+        loadChildren: () => import('../users/users.module').then(m => m.UsersPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/download',
         pathMatch: 'full'

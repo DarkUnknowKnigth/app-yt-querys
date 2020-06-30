@@ -82,14 +82,18 @@
                     <ion-icon name="play-skip-forward-outline" style="width: 100%;"></ion-icon>
                   </ion-button>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center">
-                  {{displayProgress}}
+                <ion-col size="2" class="ion-text-center">
+                  <ion-label>
+                    {{displayProgress}}
+                  </ion-label>
                 </ion-col>
-                <ion-col size="6" class="ion-margin-top">
+                <ion-col size="8" class="ion-margin-top">
                   <ion-range color="tertiary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center">
-                  {{playingSong.duration.length == 5? '0': ''}}{{playingSong.duration}}
+                <ion-col size="2" class="ion-text-center">
+                  <ion-label>                    
+                    {{playingSong.duration.length == 5? '': '0'}}{{playingSong.duration}}
+                  </ion-label>
                 </ion-col>
               </ion-row>
           </ion-card-content>
@@ -119,7 +123,7 @@
                   <ion-icon name="pause-outline" *ngIf="playingSong.id === song.id"></ion-icon>
                 </ion-button> -->
                 <ion-button slot="end" color="tertiary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
-                <ion-button slot="end" color="danger" size="small" (click)="delete(song)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+                <ion-button slot="end" color="danger" size="small" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
               </ion-item>
             </ion-item-group>
           </div>
@@ -151,7 +155,7 @@
                 <ion-icon name="play-outline" *ngIf="playingSong.id === song.id && !isPlaying"></ion-icon>
               </ion-button> -->
               <ion-button slot="end" color="tertiary"(click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
-              <ion-button slot="end" color="danger" (click)="delete(song)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="danger" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
               
             </ion-item>
           </ion-item-group>
@@ -211,7 +215,7 @@
                 <ion-label>{{video.duration}}</ion-label>
               </ion-button>
               <ion-button slot="end" color="tertiary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
-              <ion-button slot="end" color="danger" size="small" (click)="deleteVideo(video)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="danger" size="small" (click)="deleteVideo(video)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </ion-list>

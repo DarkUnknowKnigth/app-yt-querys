@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpHandler } from '@angular/common/http';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { auth } from 'firebase/app'
 import { BehaviorSubject } from 'rxjs';
@@ -13,6 +13,8 @@ export class AuthService {
   // public base = 'http://192.168.100.18:3000';
   public soureceAuth = new BehaviorSubject<any>({});
   public authStatus = this.soureceAuth.asObservable();
+  public role = 0;
+  public headers : HttpHeaders;
   constructor(private http: HttpClient, public fbAuth: AngularFireAuth) {
     const user = JSON.parse(localStorage.getItem('__TYD_USER__'));
     if(user){
@@ -20,7 +22,13 @@ export class AuthService {
     }
   }
   setAuthStatus(newAuth: any){
-    this.isAuth = newAuth != null;
+    this.isAuth = newAuth._id;
+    this.role = newAuth.role;
+    if(newAuth._id){
+      this.headers = new HttpHeaders({
+        'Session': newAuth.session,
+      });
+    }
     localStorage.setItem('__TYD_USER__', JSON.stringify(newAuth));
     this.soureceAuth.next(newAuth);
   }
@@ -37,7 +45,6 @@ export class AuthService {
     return this.http.post(`${this.base}/login`,{email:e, password:p});
   }
   logout(){
-    this.setAuthStatus(null);
     localStorage.removeItem('__TYD_USER__');
     return this.http.get(`${this.base}/logout`);
   }

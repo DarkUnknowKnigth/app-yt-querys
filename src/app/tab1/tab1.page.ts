@@ -26,7 +26,7 @@ export class Tab1Page {
   }
   logout(){
     this.auth.logout().subscribe(resp => {
-      console.log(resp);
+      this.auth.setAuthStatus({});
       this.router.navigateByUrl('/tabs/player');
     }, err => {
       console.log(err);
@@ -39,12 +39,7 @@ export class Tab1Page {
     img.click();
   }
   update(){
-    const data = {
-      user:this.user,
-      ...this.data,
-      session: this.user.session,
-    }
-    this.usersv.update( this.user._id, data ).subscribe( resp => {
+    this.usersv.update( this.user._id, this.data ).subscribe( resp => {
       this.toastsv.presentToast('User updated 😉');
       const user = resp['user'];
       user.session = resp['session'];

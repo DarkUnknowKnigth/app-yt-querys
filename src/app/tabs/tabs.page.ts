@@ -7,7 +7,5 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-  constructor(public authsv:AuthService) {
-  }
-
+  constructor(public authsv:AuthService) {}
 }

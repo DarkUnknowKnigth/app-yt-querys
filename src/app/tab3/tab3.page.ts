@@ -4,6 +4,8 @@ import {Howl, Howler} from 'howler';
 import { IonRange } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
+import { UserService } from '../services/user.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tab3',
@@ -25,8 +27,10 @@ export class Tab3Page{
   querySong = '';
   queryVideo = '';
   displayProgress = '';
+  user: any;
   @ViewChild('range') range:IonRange;
-  constructor(public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
+  constructor(private authsv:AuthService ,public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
+    this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.songsv.currentSongs.subscribe( songs => {
       this.songs = songs;
@@ -91,6 +95,9 @@ export class Tab3Page{
     this.player = new Howl({
       src:[song.path],
       html5:true,
+      onpause: ()=>{
+        this.isPlaying = false;
+      },
       onplay:() => {
         this.isPlaying = true;
         this.playingSong = song;

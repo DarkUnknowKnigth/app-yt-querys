@@ -1,7 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title  color="tertiary">
-    YT-Download / Account
+    <ion-title slot="end" color="tertiary" size="large">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>
+        Account
+      </ion-label>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -12,12 +15,15 @@
       <ion-title  color="tertiary" size="large">Account</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-list>
+  <ion-list *ngIf="user._id">  
     <ion-item lines="none">
       <ion-thumbnail slot="start">
         <ion-img [src]="user ? user.photo:'/assets/images/song.png'"></ion-img>
       </ion-thumbnail>
       <ion-label> {{user ? user.name : 'Name'}}</ion-label>
+      <ion-button slot="end" color="danger" *ngIf="user.role==666">
+        <ion-icon slot="icon-only" name="glasses" size="large"></ion-icon>
+      </ion-button>
     </ion-item>
     <ion-item lines="none">
       <ion-button size="medium" color="tertiary" (click)="save(img)" >
