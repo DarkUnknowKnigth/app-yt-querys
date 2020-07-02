@@ -60,8 +60,8 @@
         </ion-img>
         <ion-card class="full" style="opacity: 0.90;">
           <ion-card-header>
-            <ion-label><h2>{{playingSong.title}}</h2></ion-label><br>
-            <ion-label><small>{{playingSong.artist}}</small></ion-label>
+            <ion-label>{{playingSong.title}}</ion-label><br>
+            <small>{{playingSong.artist}}</small>
           </ion-card-header>
           <ion-card-content>
               <ion-row class="ion-align-items-center">
@@ -246,13 +246,13 @@
   <ion-toolbar  *ngIf="playingSong.id" style="margin-left:0; margin-right: 0;">
     <ion-item-sliding>
       <ion-item (click)="show('player')" class="touchable" lines="none">
-        <img slot="start" [src]="playingSong.imagePath" width="80" height="100%" style="margin: 0 1rem" class="notMobile" (click)="show('player')" class="touchable">
-        <label slot="start">
-          <span>{{playingSong.title.substring(0,30)}}</span>
-          <br>
-          <small style="color:#7670FF;">{{playingSong.artist}}</small>
-        </label>
+        <img class="mini-player-img" [src]="playingSong.imagePath" (click)="show('player')">
+        <div class="wrapper-mini-player">
+          <span>{{playingSong.title}}</span><br>
+          <small>{{playingSong.artist}}</small>
+        </div>
       </ion-item>
+      <ion-progress-bar color="primary" [value]="progress*0.01" color="tertiary" class="progress-mini"></ion-progress-bar>
       <ion-item-options side="start">
         <ion-item-option (click)="prev()" color="tertiary">
           <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
@@ -276,6 +276,5 @@
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-    <ion-progress-bar color="primary" [value]="progress*0.01" color="tertiary" class="progress-mini"></ion-progress-bar>
   </ion-toolbar>
 </ion-footer>
