@@ -1,10 +1,9 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild,  } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
-import { IonRange } from '@ionic/angular';
+import { IonRange, Animation, AnimationController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
-import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -31,9 +30,10 @@ export class Tab3Page{
   queryVideo = '';
   displayProgress = '';
   user: any;
+  animation: Animation;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
-    private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
+    private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.songsv.currentSongs.subscribe( songs => {
@@ -118,6 +118,16 @@ export class Tab3Page{
         console.log(e);
       }
     });
+    this.animation = this.animationCtrl.create()
+    .addElement(document.getElementById('title-mini'))
+    .duration(15000)
+    .iterations(Infinity)
+    .keyframes([
+      { offset: 0, transform: 'translateX(0%)'},
+      { offset: 0.5, transform: 'translateX(-60%)'},
+      { offset: 1, transform: 'translateX(0%)'},
+    ]);
+    this.animation.play();
     this.player.play();
   }
   togglePlayer(pause: boolean){

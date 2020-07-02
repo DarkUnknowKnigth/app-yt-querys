@@ -248,7 +248,7 @@
       <ion-item (click)="show('player')" class="touchable" lines="none">
         <img class="mini-player-img" [src]="playingSong.imagePath" (click)="show('player')">
         <div class="wrapper-mini-player">
-          <span>{{playingSong.title}}</span><br>
+          <span id="title-mini">{{playingSong.title}}</span><br>
           <small>{{playingSong.artist}}</small>
         </div>
       </ion-item>
