@@ -66,20 +66,20 @@
           <ion-card-content>
               <ion-row class="ion-align-items-center">
                 
-                <ion-col size="3" class="ion-text-center">
+                <ion-col size="4" class="ion-text-center">
                   <ion-button class="btn-player" fill="clear" color="dark" (click)="prev()">
-                    <ion-icon name="play-skip-back-outline"></ion-icon>
+                    <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
-                <ion-col size="6" class="ion-text-center">
+                <ion-col size="4" class="ion-text-center">
                   <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="togglePlayer(isPlaying)" >
-                    <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
-                    <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
+                    <ion-icon slot="icon-only" *ngIf="!isPlaying" name="play-outline"></ion-icon>
+                    <ion-icon *ngIf="isPlaying" slot="icon-only" name="pause-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center">
+                <ion-col size="4" class="ion-text-center">
                   <ion-button class="btn-player" fill="clear" color="dark" (click)="next()">
-                    <ion-icon name="play-skip-forward-outline" style="width: 100%;"></ion-icon>
+                    <ion-icon slot="icon-only" name="play-skip-forward-outline"></ion-icon>
                   </ion-button>
                 </ion-col>
                 <ion-col size="2" class="ion-text-center">
@@ -112,7 +112,7 @@
                 <ion-thumbnail slot="start">
                   <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
                 </ion-thumbnail>
-                <ion-label>{{song.artist}} - {{song.title}}</ion-label>
+                <ion-label>{{song.title}}</ion-label>
               </ion-item>
               <ion-item lines="full">
                 <ion-button slot="end" color="light">
@@ -135,13 +135,16 @@
         <!-- List of songs downloaded -->
         <ion-list>
           <ion-item-group *ngFor="let song of songs">
-            <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none">
+            <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [color]="playingSong.id === song.id?'tertiary':''">
               <ion-thumbnail slot="start">
                 <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
               </ion-thumbnail>
-              <ion-label>{{song.artist}} - {{song.title}}</ion-label>
+              <p slot="start">
+                {{song.title}}
+                <br><small>{{song.artist}}</small>
+              </p>
             </ion-item>
-            <ion-item lines="full">
+            <ion-item lines="full" [color]="playingSong.id === song.id?'tertiary':''">
               <ion-button slot="end" color="success">
                 <ion-label class="notMobile">On server</ion-label>
                 <ion-label class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
@@ -228,33 +231,48 @@
         <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab vertical="bottom" [horizontal]="showing == 'player' ? 'end' : 'start'" slot="fixed">
-      <ion-fab-button (click)="random()" color="tertiary">
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="showing == 'player'">
+      <ion-fab-button [color]="isRandom?'danger':'tertiary'" (click)="isRandom = !isRandom">
         <ion-icon name="shuffle-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="start" slot="fixed">
+      <ion-fab-button (click)="repeating = !repeating" [color]="repeating?'danger':'tertiary'">
+        <ion-icon name="repeat-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
 </ion-content>
 <ion-footer *ngIf="showing !== 'player'" style="margin-left:0; margin-right: 0;">
   <ion-toolbar  *ngIf="playingSong.id" style="margin-left:0; margin-right: 0;">
     <ion-item-sliding>
-      <ion-item (click)="show('player')" class="touchable">
-        <img [src]="playingSong.imagePath" width="80" height="100%" style="margin: 0 1rem;" class="notMobile">
-        <ion-label>{{playingSong.title ? playingSong.title : 'Player 🔈' }}</ion-label>
+      <ion-item (click)="show('player')" class="touchable" lines="none">
+        <img slot="start" [src]="playingSong.imagePath" width="80" height="100%" style="margin: 0 1rem" class="notMobile" (click)="show('player')" class="touchable">
+        <label slot="start">
+          <span>{{playingSong.title.substring(0,30)}}</span>
+          <br>
+          <small style="color:#7670FF;">{{playingSong.artist}}</small>
+        </label>
       </ion-item>
       <ion-item-options side="start">
-        <ion-item-option color="tertiary" (click)="prev()">
-          <ion-icon name="play-skip-back-outline"></ion-icon>
+        <ion-item-option (click)="prev()" color="tertiary">
+          <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
         </ion-item-option>
         <ion-item-option color="danger" (click)="seekLess()">
-          <ion-icon name="remove-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option [color]="repeating?'danger':'tertiary'" (click)="repeating = !repeating">
+          <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
       <ion-item-options side="end">
+        <ion-item-option [color]="isRandom?'danger':'tertiary'" (click)="isRandom = !isRandom">
+          <ion-icon slot="icon-only" name="shuffle-outline"></ion-icon>
+        </ion-item-option>
         <ion-item-option color="success" (click)="seekMore()">
-          <ion-icon slot="bottom" name="add-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="add-outline"></ion-icon>
         </ion-item-option>
         <ion-item-option color="tertiary" (click)="next()">
-          <ion-icon slot="start" name="play-skip-forward-outline"></ion-icon>
+          <ion-icon slot="icon-only" name="play-skip-forward-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>

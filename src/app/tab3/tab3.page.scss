@@ -68,13 +68,57 @@
 .mobile {
   display: none;
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 700px){
   .full {
     position: fixed;
     top:0;
     left: 0;
     height: 45vh !important;
     transform: translateY(20vh);
+  }
+  .container {
+    display: block;
+  }
+  .cover-player {
+    min-height: 100%;
+    min-width: 100%;
+    width: 170vh;
+    /* Set up proportionate scaling */
+    height: 100vh;
+    transform: translateX(-80vh);
+    /* Set up positioning */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  .display-list {
+    width: 100%;
+    margin: 0;
+    max-height: 450px;
+    overflow-y: scroll;
+  }
+  .btn-player {
+    width: 50%;
+  }
+  .notMobile {
+    display: none;
+  }
+  .mobile {
+    display: flex;
+    width: 100%;
+  }
+  .btn-player {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 700px) and (max-height:880px) {
+  .full {
+    position: fixed;
+    top: -30vh;
+    left: 0;
+    height: 40vh !important;
   }
   .container {
     display: block;

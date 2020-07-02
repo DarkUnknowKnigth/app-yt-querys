@@ -13,6 +13,9 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page{
+  repeating = false;
+  isRandom = false;
+  prevRandom :number;
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
@@ -29,7 +32,8 @@ export class Tab3Page{
   displayProgress = '';
   user: any;
   @ViewChild('range') range:IonRange;
-  constructor(private authsv:AuthService ,public songsv: SongService, private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
+  constructor(private authsv:AuthService ,public songsv: SongService,
+    private route: ActivatedRoute, private dwlsv:DownloadService, private elref: ElementRef) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.songsv.currentSongs.subscribe( songs => {
@@ -104,11 +108,10 @@ export class Tab3Page{
         this.updateProgress();
       },
       onend: () =>{
-        const i = this.songs.indexOf(this.playingSong);
-        if( i !== this.songs.length -1 ){
-          this.start(this.songs[i + 1]);
+        if(this.repeating){
+          this.start(this.playingSong);
         }else{
-          this.start(this.songs[0]);
+          this.next();
         }
       },
       onloaderror: (e)=>{
@@ -126,19 +129,30 @@ export class Tab3Page{
     }
   }
   prev(){
-    const i = this.songs.indexOf(this.playingSong);
-    if( i > 0 ){
-      this.start(this.songs[i-1]);
-    }else{
-      this.start(this.songs[this.songs.length - 1]);
+    if(this.isRandom){
+      this.start(this.songs[this.prevRandom]);
+    }
+    else{
+      const i = this.songs.indexOf(this.playingSong);
+      if( i > 0 ){
+        this.start(this.songs[i-1]);
+      }else{
+        this.start(this.songs[this.songs.length - 1]);
+      }
     }
   }
   next(){
-    const i = this.songs.indexOf(this.playingSong);
-    if( i !== this.songs.length -1 ){
-      this.start(this.songs[i + 1]);
+    if(this.isRandom){
+      const track = Math.floor(Math.random() * this.songs.length);
+      this.prevRandom = this.songs.indexOf(this.playingSong);
+      this.start(this.songs[track]);
     }else{
-      this.start(this.songs[0]);
+      const i = this.songs.indexOf(this.playingSong);
+      if( i !== this.songs.length -1 ){
+        this.start(this.songs[i + 1]);
+      }else{
+        this.start(this.songs[0]);
+      }
     }
   }
   seek(){
@@ -153,10 +167,6 @@ export class Tab3Page{
   seekLess(){
     const now = this.player.seek();
     this.player.seek(now-10);
-  }
-  random(){
-    const track = Math.floor(Math.random() * this.songs.length);
-    this.start(this.songs[track]);
   }
   updateProgress(){
     const seek = this.player.seek();
