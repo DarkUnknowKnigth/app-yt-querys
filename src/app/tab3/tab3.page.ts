@@ -18,8 +18,8 @@ export class Tab3Page{
   updating = false;
   prevRandom :number;
   updatingSong: any;
-  updateTitle: string;
-  updateArtist: string;
+  updateTitle = '';
+  updateArtist = '';
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
