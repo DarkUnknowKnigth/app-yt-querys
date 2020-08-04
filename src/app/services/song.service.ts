@@ -20,6 +20,9 @@ export class SongService {
   delete(id: string){
     return this.http.delete(`${this.authsv.base}/songs/${id}`);
   }
+  update(id: string, data: any){
+    return this.http.put(`${this.authsv.base}/songs/${id}`, data);
+  }
   updateSongsList(songs: any[]){
     this.songsSource.next(songs);
   }

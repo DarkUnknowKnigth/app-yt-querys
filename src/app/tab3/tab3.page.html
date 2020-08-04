@@ -133,7 +133,7 @@
           
         </ion-list>
         <!-- List of songs downloaded -->
-        <ion-list>
+        <ion-list *ngIf="!updating">
           <ion-item-group *ngFor="let song of songs">
             <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [color]="playingSong.id === song.id?'tertiary':''">
               <ion-thumbnail slot="start">
@@ -159,10 +159,37 @@
               </ion-button> -->
               <ion-button slot="end" color="tertiary"(click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
-              
+              <ion-button slot="end" color="warning" (click)="updatingSong = song; updating = true; " *ngIf="user.role==666"><ion-icon name="create-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </ion-list>
+        <!-- Update songs  -->
+        <ion-card *ngIf="updating">
+          <ion-card-header>
+            <ion-card-title>
+              {{updatingSong.title}} - {{updatingSong.artist}}
+            </ion-card-title>
+            <ion-card-subtitle>
+              {{updatingSong.id}}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label position="floating">Title</ion-label>
+                <ion-input [(ngModel)]="updateTitle" [placeholder]="updatingSong.title"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Artist</ion-label>
+                <ion-input [(ngModel)]="updateArtist" [placeholder]="updatingSong.artist"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-button slot="end" color="warning" (click)="update(updatingSong)" *ngIf="user.role==666"><ion-icon name="save-outline" slot="start"></ion-icon> Save </ion-button>
+                <ion-button slot="end" color="danger" (click)="updating = false;" *ngIf="user.role==666"><ion-icon name="close-outline" slot="start"></ion-icon> Cancel </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
       </ion-col>
       <ion-col size="12" *ngIf="showing=='videos'">
         <!-- Search bar video -->

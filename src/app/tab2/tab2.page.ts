@@ -16,6 +16,7 @@ export class Tab2Page {
   resolution:string;
   downloading = false;
   downloaded = true;
+  help = false;
   constructor(private dwlsv: DownloadService, public toastsv: ToastService, private router:Router, private songsv: SongService) {
   }
   download(){
@@ -46,6 +47,7 @@ export class Tab2Page {
               this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
               this.downloading=false;
               this.downloaded = true;
+              this.dwlsv.save(resp['song'].pathDownload, '');
               this.router.navigateByUrl('/tabs/player?id='+id);
             }else{
               this.toastsv.presentToastWithOptions('Something Wrong',JSON.stringify(resp));

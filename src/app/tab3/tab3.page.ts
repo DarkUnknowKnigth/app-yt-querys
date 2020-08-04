@@ -5,6 +5,7 @@ import { IonRange, Animation, AnimationController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
 import { AuthService } from '../services/auth.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-tab3',
@@ -14,7 +15,11 @@ import { AuthService } from '../services/auth.service';
 export class Tab3Page{
   repeating = false;
   isRandom = false;
+  updating = false;
   prevRandom :number;
+  updatingSong: any;
+  updateTitle: string;
+  updateArtist: string;
   songs: any[] = [];
   videos: any[] = [];
   resolution = '480';
@@ -33,7 +38,8 @@ export class Tab3Page{
   animation: Animation;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
-    private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController) {
+    private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
+    private toastsv: ToastService) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.songsv.currentSongs.subscribe( songs => {
@@ -189,7 +195,7 @@ export class Tab3Page{
       this.updateProgress();
     },1000);
   }
-  download(file: any,type: string){
+  download(file: any, type: string){
     this.dwlsv.save(file.pathDownload, this.resolution);
   }
   deleteVideo(video: any){
@@ -206,6 +212,26 @@ export class Tab3Page{
       this.songs = this.songs.filter( _song => _song.id !== song.id );
     }, err => {
       console.log(err);
+    });
+  }
+  update(song: any){
+    const data = {
+      title: this.updateTitle.length > 0 ? this.updateTitle : this.updatingSong.title,
+      artist: this.updateArtist.length > 0 ? this.updateArtist : this.updatingSong.artist
+    }
+    this.songsv.update(song.id, data).subscribe( resp => {
+      this.toastsv.presentToast(resp['message']);
+      this.songsv.all().subscribe( resp2 => {
+        this.songsv.updateSongsList(resp2['songs']);
+        this.updating = false;
+        this.updateTitle = '';
+        this.updateArtist = '';
+      }, err => {
+        console.error(err);
+      });
+    }, err => {
+      console.log(err);
+      this.toastsv.presentToast( err['message']);
     });
   }
 }

@@ -15,7 +15,7 @@
       <ion-title  color="tertiary" size="large">Users</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-list>
+  <ion-list *ngIf="!showing">
     <ion-item *ngFor="let user of users" lines="full">
       <ion-label slot="start">
         {{user.name}} 
@@ -23,9 +23,27 @@
       <ion-button slot="end" color="danger" *ngIf="user.role==666">
         <ion-icon slot="icon-only" name="glasses" size="large"></ion-icon>
       </ion-button>
+      <ion-button color="primary" slot="end" size="small" (click)="selectedUser = user; showing = true">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
       <ion-button color="danger" slot="end" size="small" (click)="deleteUser(user)">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
+  <ion-card *ngIf="showing">
+    <ion-card-header>
+      <ion-card-title>{{selectedUser.name}}</ion-card-title>
+      <ion-card-subtitle>{{selectedUser.email}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        role: {{selectedUser.role}}
+      </p>
+      <ion-button color="danger" slot="end" size="small" (click)="showing = false">
+        Go Back
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

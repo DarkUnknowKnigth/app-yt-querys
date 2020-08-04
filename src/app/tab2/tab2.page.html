@@ -21,7 +21,7 @@
       <ion-input placeholder="youtube.com/watch?v=xxxxxxxxxxx" [(ngModel)]="url"></ion-input>
     </ion-item>
     <ion-item lines="input">
-      <ion-label position="floating">Select your type of file</ion-label>
+      <ion-label position="floating">Select media type</ion-label>
       <ion-select placeholder="Type" [(ngModel)]="type">
         <ion-select-option value="video">Video</ion-select-option>
         <ion-select-option value="audio">Audio</ion-select-option>
@@ -44,7 +44,31 @@
       <ion-button slot="end" size="medium" color="tertiary" onclick="window.open('https://github.com/DarkUnknowKnigth/')">
         <ion-icon name="logo-github"  size="medium"></ion-icon>
       </ion-button>
+      <ion-button slot="end" size="medium" color="tertiary" (click)="help = true">
+        <ion-icon name="help"  size="medium"></ion-icon>
+      </ion-button>
     </ion-item>
+    <ion-card *ngIf="help">
+      <ion-card-header>
+        <ion-card-title>Help / Ayuda</ion-card-title>
+        <ion-card-subtitle>How to download? / ¿Como descargar?</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+       <ol>
+         <li>
+           Copy url from youtube / Copia el link del video en youtube 💻
+         </li>
+         <li>Paste it in our app ! / Pegalo en nuestra app ! ⌨</li>
+         <li>Select your download media type / Selecciona el formato de descarga 🔈 📽 </li>
+         <li>Download !!! / Descargalo !!! 🔽 </li>
+       </ol>
+       <ion-item lines="none">
+        <ion-button slot="end" size="medium" color="tertiary" (click)="help = false">
+          Okey
+        </ion-button>
+       </ion-item>
+      </ion-card-content>
+    </ion-card>
     <ion-item-group *ngIf="downloading"> 
       <ion-item lines="none" class="ion-text-center">
         <ion-label>Saving & Converting ...</ion-label>

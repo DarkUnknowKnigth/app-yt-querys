@@ -10,7 +10,9 @@ import { ToastService } from '../toast.service';
 })
 export class UsersPage implements OnInit {
   users = [];
-  constructor(private usersv: UserService,private toastsv: ToastService) {
+  showing = false;
+  selectedUser;
+  constructor(private usersv: UserService, private toastsv: ToastService ) {
     this.usersv.all().subscribe( resp => {
       this.users = resp['users'];
     }, err =>{
