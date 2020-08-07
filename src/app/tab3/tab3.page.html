@@ -1,5 +1,18 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-segment (ionChange)="segmentChanged($event)" #segment>
+      <ion-segment-button value="songs">
+        <ion-icon name="musical-notes-outline"></ion-icon>Music
+      </ion-segment-button>
+      <ion-segment-button value="videos">
+        <ion-icon name="server-outline"></ion-icon> Video
+      </ion-segment-button>
+      <ion-segment-button value="player">
+        <ion-icon name="play-circle"></ion-icon>Player
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <!-- <ion-toolbar>
     <ion-buttons slot="secondary">
       <ion-button color="tertiary" (click)="show('songs')">
         Music<ion-icon slot="start" name="musical-notes-outline"></ion-icon>
@@ -18,7 +31,7 @@
         Player
       </ion-button>
     </ion-buttons>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
 <ion-content [fullscreen]="true" #content>
@@ -56,7 +69,7 @@
       </ion-col> -->
       <!-- Audio player mobile -->
       <ion-col size="12" size-md *ngIf="showing=='player'">
-        <ion-img [src]="playingSong.id? bigCover() : '/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable cover-player">
+        <ion-img [src]="playingSong.id? bigCover() : '/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable cover-player" onerror="this.onerror=null; this.src='/assets/images/song.png'">
         </ion-img>
         <ion-card class="full" style="opacity: 0.90;">
           <ion-card-header>
@@ -108,12 +121,12 @@
           </ion-item>
           <div *ngIf="searchSongs.length > 0">
             <ion-item-group *ngFor="let song of searchSongs">
-              <ion-item lines="none" (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
+              <!-- <ion-item lines="none" (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
                 <ion-thumbnail slot="start">
                   <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
                 </ion-thumbnail>
                 <ion-label>{{song.title}}</ion-label>
-              </ion-item>
+              </ion-item> -->
               <ion-item lines="full">
                 <ion-button slot="end" color="light">
                   <ion-label>{{song.duration}}</ion-label>
@@ -136,8 +149,8 @@
         <ion-list *ngIf="!updating">
           <ion-item-group *ngFor="let song of songs">
             <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [color]="playingSong.id === song.id?'tertiary':''">
-              <ion-thumbnail slot="start">
-                <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
+              <ion-thumbnail slot="start" *ngIf="playingSong.id === song.id">
+                <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
               </ion-thumbnail>
               <p slot="start">
                 {{song.title}}
@@ -184,8 +197,8 @@
                 <ion-input [(ngModel)]="updateArtist" [placeholder]="updatingSong.artist"></ion-input>
               </ion-item>
               <ion-item>
-                <ion-button slot="end" color="warning" (click)="update(updatingSong)" *ngIf="user.role==666"><ion-icon name="save-outline" slot="start"></ion-icon> Save </ion-button>
-                <ion-button slot="end" color="danger" (click)="updating = false;" *ngIf="user.role==666"><ion-icon name="close-outline" slot="start"></ion-icon> Cancel </ion-button>
+                <ion-button slot="end" color="warning" size="medium" (click)="update(updatingSong)" *ngIf="user.role==666"><ion-icon name="save-outline" slot="start"></ion-icon> Save </ion-button>
+                <ion-button slot="end" color="danger" size="medium" (click)="updating = false;" *ngIf="user.role==666"><ion-icon name="close-outline" slot="start"></ion-icon> Cancel </ion-button>
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -202,7 +215,7 @@
           <ion-item-group *ngFor="let video of videos" lines="none">
             <ion-item lines="none">
               <ion-thumbnail slot="start">
-                <img [src]="video.imagePath? video.imagePath:'/assets/images/video.png'">
+                <img [src]="video.imagePath? video.imagePath:'/assets/images/video.png'"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
               </ion-thumbnail>
               <ion-label>{{video.artist}} - {{video.title}}</ion-label>
             </ion-item>
@@ -269,6 +282,7 @@
       </ion-fab-button>
     </ion-fab>
 </ion-content>
+<!-- player in backgound -->
 <ion-footer *ngIf="showing !== 'player'" style="margin-left:0; margin-right: 0;">
   <ion-toolbar  *ngIf="playingSong.id" style="margin-left:0; margin-right: 0;">
     <ion-item-sliding>

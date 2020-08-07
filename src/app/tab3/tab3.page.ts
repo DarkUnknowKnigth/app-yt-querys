@@ -1,7 +1,7 @@
-import { Component, ViewChild,  } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
-import { IonRange, Animation, AnimationController } from '@ionic/angular';
+import { IonRange, Animation, AnimationController, IonSegment } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
 import { AuthService } from '../services/auth.service';
@@ -12,7 +12,7 @@ import { ToastService } from '../toast.service';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page{
+export class Tab3Page implements OnInit{
   repeating = false;
   isRandom = false;
   updating = false;
@@ -36,6 +36,7 @@ export class Tab3Page{
   displayProgress = '';
   user: any;
   animation: Animation;
+  @ViewChild('segment', {static:true}) segment: IonSegment;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
     private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
@@ -61,6 +62,12 @@ export class Tab3Page{
       console.error(err);
     });
     this.base = this.dwlsv.getApiUrl();
+  }
+  ngOnInit(){
+    this.segment.value = 'songs';
+  }
+  segmentChanged(ev: any){
+    this.showing = ev.detail.value;
   }
   searchSong(){
     this.searchSongs = this.songs.filter(song => song.title.toLowerCase().includes(this.querySong));
@@ -97,6 +104,7 @@ export class Tab3Page{
   }
   show(view :string){
     this.showing = view;
+    this.segment.value = view;
   }
   start(song: any){
     if(this.player){
