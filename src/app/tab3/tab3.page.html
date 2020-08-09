@@ -150,7 +150,7 @@
           <ion-item-group *ngFor="let song of songs">
             <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [color]="playingSong.id === song.id?'tertiary':''">
               <ion-thumbnail slot="start" *ngIf="playingSong.id === song.id">
-                <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
+                <img [src]="playingSong.id === song.id? song.imagePath:''"  class="list-image-song"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
               </ion-thumbnail>
               <p slot="start">
                 {{song.title}}
