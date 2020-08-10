@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../toast.service';
+import { Plugins, NotificationChannel, LocalNotificationActionPerformed } from '@capacitor/core';
+const { LocalNotifications, CapacitorMusicControls } = Plugins;
 
 @Component({
   selector: 'app-tab3',
@@ -30,19 +32,22 @@ export class Tab3Page implements OnInit{
   player: Howl = null;
   playingSong: any = {}
   isPlaying = false;
+  loading = false;
   progress;
   querySong = '';
   queryVideo = '';
   displayProgress = '';
   user: any;
   animation: Animation;
+  chanel: NotificationChannel;
   @ViewChild('segment', {static:true}) segment: IonSegment;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
-    private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
-    private toastsv: ToastService) {
+  private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
+  private toastsv: ToastService) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
+    this.loading = true;
     this.songsv.currentSongs.subscribe( songs => {
       this.songs = songs;
       this.shoudlPlay();
@@ -53,6 +58,7 @@ export class Tab3Page implements OnInit{
     });
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
+      this.loading = false;
     }, err => {
       console.error(err);
     });
@@ -63,7 +69,136 @@ export class Tab3Page implements OnInit{
     });
     this.base = this.dwlsv.getApiUrl();
   }
-  ngOnInit(){
+  async ngOnInit(){
+    await LocalNotifications.requestPermission();
+    // Creating channel without vibration
+    LocalNotifications.createChannel({
+      id: 'yt-chanel',
+      importance: 1,
+      name: 'yt-download',
+      sound: null,
+      vibration: false,
+      lights: false,
+      visibility: 1
+    });
+    // Creating buttons below notification
+    LocalNotifications.registerActionTypes({
+      types:[
+        {
+          id: 'sound-background',
+          actions: [
+            {
+              id: 'prev',
+              title: 'Prev',
+            },
+            {
+              id: 'play',
+              title: 'Play',
+            },
+            {
+              id: 'next',
+              title: 'Next',
+            },
+          ]
+        }
+      ]
+    });
+    LocalNotifications.addListener('localNotificationActionPerformed', (notification: LocalNotificationActionPerformed) => {
+      console.log(notification.inputValue)
+      switch(notification.actionId){
+        case 'play':
+          this.togglePlayer(this.isPlaying);
+          break;
+        case 'prev':
+          this.prev();
+          break;
+        case 'next':
+          this.next();
+          break;
+        default:
+          break;
+      }
+    });
+    CapacitorMusicControls.addListener('controlsNotification', (action: any) => {
+      const message = action.message;
+      switch(message) {
+        case 'music-controls-next':
+          this.next();
+          break;
+        case 'music-controls-previous':
+          this.prev();
+          break;
+        case 'music-controls-pause':
+          this.player.pause();
+          CapacitorMusicControls.updateIsPlaying({
+            isPlaying: false, // affects Android only
+          });
+          break;
+        case 'music-controls-play':
+          this.player.play();
+          CapacitorMusicControls.updateIsPlaying({
+            isPlaying: true, // affects Android only
+          });
+          break;
+        case 'music-controls-destroy':
+          this.player.stop();
+          CapacitorMusicControls.updateIsPlaying({
+            isPlaying: false, // affects Android only
+          });
+          break;
+
+        // External controls (iOS only)
+        case 'music-controls-toggle-play-pause' :
+          if(this.isPlaying){
+            this.player.pause();
+          }else{
+            this.player.play();
+          }
+          break;
+        case 'music-controls-seek-to':
+          const seekToInSeconds = JSON.parse(action).position;
+          this.seek();
+          // Do something
+          break;
+        case 'music-controls-skip-forward':
+          // Do something
+          this.next();
+          break;
+        case 'music-controls-skip-backward':
+          // Do something
+          this.prev();
+          break;
+
+        // Headset events (Android only)
+        // All media button events are listed below
+        case 'music-controls-media-button' :
+          if(this.isPlaying){
+            this.player.pause();
+            CapacitorMusicControls.updateIsPlaying({
+              isPlaying: false, // affects Android only
+            });
+          }else{
+            this.player.play();
+            CapacitorMusicControls.updateIsPlaying({
+              isPlaying: true, // affects Android only
+            });
+          }
+          break;
+        case 'music-controls-headset-unplugged':
+          // Do something
+          this.player.pause();
+          break;
+        case 'music-controls-headset-plugged':
+          this.player.play();
+          break;
+        default:
+          break;
+      }
+    }, success=>{
+      console.log(success);
+    }, error=>{
+      console.log(error);
+    });
     this.segment.value = 'songs';
   }
   segmentChanged(ev: any){
@@ -132,24 +267,48 @@ export class Tab3Page implements OnInit{
         console.log(e);
       }
     });
-    this.animation = this.animationCtrl.create()
-    .addElement(document.getElementById('title-mini'))
-    .duration(15000)
-    .iterations(Infinity)
-    .keyframes([
-      { offset: 0, transform: 'translateX(0%)'},
-      { offset: 0.5, transform: 'translateX(-60%)'},
-      { offset: 1, transform: 'translateX(0%)'},
-    ]);
-    this.animation.play();
     this.player.play();
+    CapacitorMusicControls.create({
+      track: song.title,		// optional, default : ''
+      artist: song.artist,						// optional, default : ''
+      album: 'YT-DOWNLOAD',     // optional, default: ''
+ 	    cover: song.imagePath,
+      isPlaying: true,
+      dismissable: true,
+      hasPrev: true,      // show previous button, optional, default: true
+      hasNext: true,      // show next button, optional, default: true
+      hasClose  : false,       // show close button, optional, default: false
+    // iOS only, optional
+      hasSkipForward : true,  // show skip forward button, optional, default: false
+      hasSkipBackward : true, // show skip backward button, optional, default: false
+      hasScrubbing: false, // enable scrubbing from control center and lockscreen progress bar, optional
+      // Android only, optional
+      ticker: `Now Playing "${song.title} - ${song.artist}"`,
+      // text displayed in the status bar when the notification (and the ticker) are updated, optional
+      // All icons default to their built-in android equivalents
+      playIcon: 'media_play',
+      pauseIcon: 'media_pause',
+      prevIcon: 'media_prev',
+      nextIcon: 'media_next',
+      closeIcon: 'media_close',
+      notificationIcon: 'notification'
+    });
+    CapacitorMusicControls.updateIsPlaying({
+      isPlaying: true, // affects Android only
+    });
   }
   togglePlayer(pause: boolean){
     this.isPlaying = !pause;
     if (pause) {
       this.player.pause();
+      CapacitorMusicControls.updateIsPlaying({
+        isPlaying: false, // affects Android only
+      });
     } else {
       this.player.play();
+      CapacitorMusicControls.updateIsPlaying({
+        isPlaying: true, // affects Android only
+      });
     }
   }
   prev(){
@@ -203,7 +362,16 @@ export class Tab3Page implements OnInit{
       this.updateProgress();
     },1000);
   }
-  download(file: any, type: string){
+  async download(file: any, type: string){
+    const notifs = await LocalNotifications.schedule({
+      notifications: [
+        {
+          title: 'Downloading: '+file.title,
+          body: 'Artist: '+file.artist,
+          id: 2,
+        }
+      ]
+    });
     this.dwlsv.save(file.pathDownload, this.resolution);
   }
   deleteVideo(video: any){
