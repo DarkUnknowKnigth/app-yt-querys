@@ -130,18 +130,21 @@ export class Tab3Page implements OnInit{
           break;
         case 'music-controls-pause':
           this.player.pause();
+          this.isPlaying = false;
           CapacitorMusicControls.updateIsPlaying({
             isPlaying: false, // affects Android only
           });
           break;
         case 'music-controls-play':
           this.player.play();
+          this.isPlaying = true;
           CapacitorMusicControls.updateIsPlaying({
             isPlaying: true, // affects Android only
           });
           break;
         case 'music-controls-destroy':
-          this.player.stop();
+          this.player.pause();
+          this.isPlaying = false;
           CapacitorMusicControls.updateIsPlaying({
             isPlaying: false, // affects Android only
           });
@@ -151,13 +154,21 @@ export class Tab3Page implements OnInit{
         case 'music-controls-toggle-play-pause' :
           if(this.isPlaying){
             this.player.pause();
+            this.isPlaying = false;
+            CapacitorMusicControls.updateIsPlaying({
+              isPlaying: false, // affects Android only
+            });
           }else{
             this.player.play();
+            this.isPlaying = true;
+            CapacitorMusicControls.updateIsPlaying({
+              isPlaying: true, // affects Android only
+            });
           }
           break;
         case 'music-controls-seek-to':
           const seekToInSeconds = JSON.parse(action).position;
-          this.seek();
+          this.seekMore();
           // Do something
           break;
         case 'music-controls-skip-forward':
@@ -174,11 +185,13 @@ export class Tab3Page implements OnInit{
         case 'music-controls-media-button' :
           if(this.isPlaying){
             this.player.pause();
+            this.isPlaying = false;
             CapacitorMusicControls.updateIsPlaying({
               isPlaying: false, // affects Android only
             });
           }else{
             this.player.play();
+            this.isPlaying = true;
             CapacitorMusicControls.updateIsPlaying({
               isPlaying: true, // affects Android only
             });
@@ -187,9 +200,11 @@ export class Tab3Page implements OnInit{
         case 'music-controls-headset-unplugged':
           // Do something
           this.player.pause();
+          this.isPlaying = false;
           break;
         case 'music-controls-headset-plugged':
           this.player.play();
+          this.isPlaying = true;
           break;
         default:
           break;
