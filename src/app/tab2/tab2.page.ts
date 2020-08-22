@@ -44,7 +44,7 @@ export class Tab2Page {
           this.dwlsv.downloadAudio(id).subscribe( resp => {
             if(resp['songs'] && resp['songs'].length > 0){
               this.songsv.updateSongsList(resp['songs']);
-              this.toastsv.presentToastWithOptions('Downloaded','Your Download Is Ready 🤩 ' + resp['message']);
+              this.toastsv.presentToastWithOptions('Downloaded',resp['message']);
               this.downloading=false;
               this.downloaded = true;
               this.dwlsv.save(resp['song'].pathDownload, '');

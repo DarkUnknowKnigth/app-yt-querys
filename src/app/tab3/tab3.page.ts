@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
-import { IonRange, Animation, AnimationController, IonSegment } from '@ionic/angular';
+import { IonRange, Animation, AnimationController, IonSegment, Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
 import { AuthService } from '../services/auth.service';
@@ -40,11 +40,13 @@ export class Tab3Page implements OnInit{
   user: any;
   animation: Animation;
   chanel: NotificationChannel;
+  showLyrics = false;
+  lyrics = 'Not avalible';
   @ViewChild('segment', {static:true}) segment: IonSegment;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
   private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
-  private toastsv: ToastService) {
+  private toastsv: ToastService, private plt: Platform) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.loading = true;
@@ -71,16 +73,6 @@ export class Tab3Page implements OnInit{
   }
   async ngOnInit(){
     await LocalNotifications.requestPermission();
-    // Creating channel without vibration
-    LocalNotifications.createChannel({
-      id: 'yt-chanel',
-      importance: 1,
-      name: 'yt-download',
-      sound: null,
-      vibration: false,
-      lights: false,
-      visibility: 1
-    });
     // Creating buttons below notification
     LocalNotifications.registerActionTypes({
       types:[
@@ -119,101 +111,103 @@ export class Tab3Page implements OnInit{
           break;
       }
     });
-    CapacitorMusicControls.addListener('controlsNotification', (action: any) => {
-      const message = action.message;
-      switch(message) {
-        case 'music-controls-next':
-          this.next();
-          break;
-        case 'music-controls-previous':
-          this.prev();
-          break;
-        case 'music-controls-pause':
-          this.player.pause();
-          this.isPlaying = false;
-          CapacitorMusicControls.updateIsPlaying({
-            isPlaying: false, // affects Android only
-          });
-          break;
-        case 'music-controls-play':
-          this.player.play();
-          this.isPlaying = true;
-          CapacitorMusicControls.updateIsPlaying({
-            isPlaying: true, // affects Android only
-          });
-          break;
-        case 'music-controls-destroy':
-          this.player.pause();
-          this.isPlaying = false;
-          CapacitorMusicControls.updateIsPlaying({
-            isPlaying: false, // affects Android only
-          });
-          break;
-
-        // External controls (iOS only)
-        case 'music-controls-toggle-play-pause' :
-          if(this.isPlaying){
+    if(this.plt.is('android')){
+      // Creating channel without vibration
+      LocalNotifications.createChannel({
+        id: 'yt-chanel',
+        importance: 1,
+        name: 'yt-download',
+        sound: null,
+        vibration: false,
+        lights: false,
+        visibility: 1
+      });
+      CapacitorMusicControls.addListener('controlsNotification', (action: any) => {
+        const message = action.message;
+        switch(message) {
+          case 'music-controls-next':
+            this.next();
+            break;
+          case 'music-controls-previous':
+            this.prev();
+            break;
+          case 'music-controls-pause':
+            this.togglePlayer(true);
+            break;
+          case 'music-controls-play':
+            this.togglePlayer(false);
+            break;
+          case 'music-controls-destroy':
             this.player.pause();
             this.isPlaying = false;
             CapacitorMusicControls.updateIsPlaying({
               isPlaying: false, // affects Android only
             });
-          }else{
-            this.player.play();
-            this.isPlaying = true;
-            CapacitorMusicControls.updateIsPlaying({
-              isPlaying: true, // affects Android only
-            });
-          }
-          break;
-        case 'music-controls-seek-to':
-          const seekToInSeconds = JSON.parse(action).position;
-          this.seekMore();
-          // Do something
-          break;
-        case 'music-controls-skip-forward':
-          // Do something
-          this.next();
-          break;
-        case 'music-controls-skip-backward':
-          // Do something
-          this.prev();
-          break;
-
-        // Headset events (Android only)
-        // All media button events are listed below
-        case 'music-controls-media-button' :
-          if(this.isPlaying){
+            break;
+          // External controls (iOS only)
+          case 'music-controls-toggle-play-pause' :
+            if(this.isPlaying){
+              this.player.pause();
+              this.isPlaying = false;
+              CapacitorMusicControls.updateIsPlaying({
+                isPlaying: false, // affects Android only
+              });
+            }else{
+              this.player.play();
+              this.isPlaying = true;
+              CapacitorMusicControls.updateIsPlaying({
+                isPlaying: true, // affects Android only
+              });
+            }
+            break;
+          case 'music-controls-seek-to':
+            const seekToInSeconds = JSON.parse(action).position;
+            this.seekMore();
+            // Do something
+            break;
+          case 'music-controls-skip-forward':
+            // Do something
+            this.next();
+            break;
+          case 'music-controls-skip-backward':
+            // Do something
+            this.prev();
+            break;
+          // Headset events (Android only)
+          // All media button events are listed below
+          case 'music-controls-media-button' :
+            if(this.isPlaying){
+              this.player.pause();
+              this.isPlaying = false;
+              CapacitorMusicControls.updateIsPlaying({
+                isPlaying: false, // affects Android only
+              });
+            }else{
+              this.player.play();
+              this.isPlaying = true;
+              CapacitorMusicControls.updateIsPlaying({
+                isPlaying: true, // affects Android only
+              });
+            }
+            break;
+          case 'music-controls-headset-unplugged':
+            // Do something
             this.player.pause();
             this.isPlaying = false;
-            CapacitorMusicControls.updateIsPlaying({
-              isPlaying: false, // affects Android only
-            });
-          }else{
+            break;
+          case 'music-controls-headset-plugged':
             this.player.play();
             this.isPlaying = true;
-            CapacitorMusicControls.updateIsPlaying({
-              isPlaying: true, // affects Android only
-            });
-          }
-          break;
-        case 'music-controls-headset-unplugged':
-          // Do something
-          this.player.pause();
-          this.isPlaying = false;
-          break;
-        case 'music-controls-headset-plugged':
-          this.player.play();
-          this.isPlaying = true;
-          break;
-        default:
-          break;
-      }
-    }, success=>{
-      console.log(success);
-    }, error=>{
-      console.log(error);
-    });
+            break;
+          default:
+            break;
+        }
+      }, success=>{
+        console.log(success);
+      }, error=>{
+        console.log(error);
+      });
+    }
     this.segment.value = 'songs';
   }
   segmentChanged(ev: any){
@@ -257,12 +251,23 @@ export class Tab3Page implements OnInit{
     this.segment.value = view;
   }
   start(song: any){
+    this.songsv.getLyrics(song).subscribe(resp =>{
+      if(resp['lyrics']){
+        this.lyrics = resp['lyrics'].replace('\n','<br>');
+        console.log(this.lyrics);
+      }
+    }, err=>{
+      console.log(err);
+      this.lyrics = 'Not found 😒'
+    });
     if(this.player){
       this.player.stop();
     }
     this.player = new Howl({
       src:[song.path],
       html5:true,
+      autoplay: false,
+      loop: false,
       onpause: ()=>{
         this.isPlaying = false;
       },
@@ -283,47 +288,53 @@ export class Tab3Page implements OnInit{
       }
     });
     this.player.play();
-    CapacitorMusicControls.create({
-      track: song.title,		// optional, default : ''
-      artist: song.artist,						// optional, default : ''
-      album: 'YT-DOWNLOAD',     // optional, default: ''
- 	    cover: song.imagePath,
-      isPlaying: true,
-      dismissable: true,
-      hasPrev: true,      // show previous button, optional, default: true
-      hasNext: true,      // show next button, optional, default: true
-      hasClose  : false,       // show close button, optional, default: false
-    // iOS only, optional
-      hasSkipForward : true,  // show skip forward button, optional, default: false
-      hasSkipBackward : true, // show skip backward button, optional, default: false
-      hasScrubbing: false, // enable scrubbing from control center and lockscreen progress bar, optional
-      // Android only, optional
-      ticker: `Now Playing "${song.title} - ${song.artist}"`,
-      // text displayed in the status bar when the notification (and the ticker) are updated, optional
-      // All icons default to their built-in android equivalents
-      playIcon: 'media_play',
-      pauseIcon: 'media_pause',
-      prevIcon: 'media_prev',
-      nextIcon: 'media_next',
-      closeIcon: 'media_close',
-      notificationIcon: 'notification'
-    });
-    CapacitorMusicControls.updateIsPlaying({
-      isPlaying: true, // affects Android only
-    });
+    if(this.plt.is('android')){
+      CapacitorMusicControls.create({
+        track: song.title,		// optional, default : ''
+        artist: song.artist,						// optional, default : ''
+        album: 'YT-DOWNLOAD',     // optional, default: ''
+        cover: song.imagePath,
+        isPlaying: true,
+        dismissable: true,
+        hasPrev: true,      // show previous button, optional, default: true
+        hasNext: true,      // show next button, optional, default: true
+        hasClose  : false,       // show close button, optional, default: false
+      // iOS only, optional
+        hasSkipForward : true,  // show skip forward button, optional, default: false
+        hasSkipBackward : true, // show skip backward button, optional, default: false
+        hasScrubbing: false, // enable scrubbing from control center and lockscreen progress bar, optional
+        // Android only, optional
+        ticker: `Now Playing "${song.title} - ${song.artist}"`,
+        // text displayed in the status bar when the notification (and the ticker) are updated, optional
+        // All icons default to their built-in android equivalents
+        playIcon: 'media_play',
+        pauseIcon: 'media_pause',
+        prevIcon: 'media_prev',
+        nextIcon: 'media_next',
+        closeIcon: 'media_close',
+        notificationIcon: 'notification'
+      });
+      CapacitorMusicControls.updateIsPlaying({
+        isPlaying: true, // affects Android only
+      });
+    }
   }
   togglePlayer(pause: boolean){
     this.isPlaying = !pause;
     if (pause) {
       this.player.pause();
-      CapacitorMusicControls.updateIsPlaying({
-        isPlaying: false, // affects Android only
-      });
+      if(this.plt.is('android')){
+        CapacitorMusicControls.updateIsPlaying({
+          isPlaying: false, // affects Android only
+        });
+      }
     } else {
       this.player.play();
-      CapacitorMusicControls.updateIsPlaying({
-        isPlaying: true, // affects Android only
-      });
+      if(this.plt.is('android')){
+        CapacitorMusicControls.updateIsPlaying({
+          isPlaying: true, // affects Android only
+        });
+      }
     }
   }
   prev(){

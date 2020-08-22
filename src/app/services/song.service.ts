@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { async } from '@angular/core/testing';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,8 @@ export class SongService {
   }
   updateSongsList(songs: any[]){
     this.songsSource.next(songs);
+  }
+  getLyrics( song: any){
+    return this.http.get(encodeURI(`${environment.lyrics}/${song.artist}/${song.title}`));
   }
 }

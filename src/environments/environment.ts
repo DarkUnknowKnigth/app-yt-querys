@@ -13,7 +13,9 @@ export const environment = {
     messagingSenderId: '828101036030',
     appId: '1:828101036030:web:1eceb391b470978babe2af',
     measurementId: 'G-1PVF68YRDC'
-  }
+  },
+  lyrics:'https://api.lyrics.ovh/v1/',
+  api:'https://y2b-downloader.herokuapp.com'
 };
 
 /*
