@@ -28,6 +28,6 @@ export class SongService {
     this.songsSource.next(songs);
   }
   getLyrics( song: any){
-    return this.http.get(encodeURI(`${environment.lyrics}/${song.artist}/${song.title}`));
+    return this.http.get(encodeURI(`${environment.lyrics}/${song.artist.replace('/','').split(' ').map( t => t.charAt(0).toUpperCase() + t.slice(1)).join(' ')}/${song.title.split(' ').map( t => t.charAt(0).toUpperCase() + t.slice(1)).join(' ')}`));
   }
 }
