@@ -253,8 +253,7 @@ export class Tab3Page implements OnInit{
   start(song: any){
     this.songsv.getLyrics(song).subscribe(resp =>{
       if(resp['lyrics']){
-        this.lyrics = resp['lyrics'].replace('\n','<br>');
-        console.log(this.lyrics);
+        this.lyrics = '<table>'+resp['lyrics'].split('\n').map( row => '<tr><td>'+row+'</td><tr>').join('')+'</table>';
       }
     }, err=>{
       console.log(err);
