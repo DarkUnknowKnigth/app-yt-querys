@@ -33,4 +33,4 @@ Dillinger uses a number of open source projects to work properly:
 
 ### Link
 ![img](./src/assets/icons/512.png)
-[YT-Downloader📱](https://yt-downloader-bc6b0.web.app/)
+[Test it!](https://yt-downloader-bc6b0.web.app/)
