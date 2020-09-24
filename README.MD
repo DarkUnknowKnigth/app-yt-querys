@@ -32,5 +32,5 @@ Dillinger uses a number of open source projects to work properly:
 * [Firebase]() - Storage and acounts mannagment
 
 ### Link
-[img](./src/assets/icons/512.png)
+![img](./src/assets/icons/512.png)
 [YT-Downloader📱](https://yt-downloader-bc6b0.web.app/)
