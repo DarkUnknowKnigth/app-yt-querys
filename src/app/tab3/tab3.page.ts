@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Output, Input } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
 import { IonRange, Animation, AnimationController, IonSegment, Platform } from '@ionic/angular';
