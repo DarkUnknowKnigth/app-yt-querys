@@ -21,7 +21,10 @@ import { ServiceWorkerModule } from '@angular/service-worker'
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      rippleEffect: false,
+      mode: 'md'
+    }),
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),

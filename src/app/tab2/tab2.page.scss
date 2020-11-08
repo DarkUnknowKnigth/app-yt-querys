@@ -11,6 +11,22 @@
     display: flex;
     justify-content: center;
 }
-ion-card {
-    height: 97%;
+.main-logo {
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+}
+.main-logo > ion-img {
+    max-width: 500px;
+}
+@media only screen and (max-width: 640px){
+    ion-list {
+        margin:0;
+    }
+    .main-logo{
+        max-width: 200px;
+    }
+}
+ion-alert{
+    --background: white;
 }

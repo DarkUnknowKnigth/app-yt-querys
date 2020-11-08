@@ -71,150 +71,154 @@ export class Tab3Page implements OnInit{
     });
     this.base = this.dwlsv.getApiUrl();
   }
-  async ngOnInit(){
-    await LocalNotifications.requestPermission();
-    // Creating buttons below notification
-    LocalNotifications.registerActionTypes({
-      types:[
-        {
-          id: 'sound-background',
-          actions: [
-            {
-              id: 'prev',
-              title: 'Prev',
-            },
-            {
-              id: 'play',
-              title: 'Play',
-            },
-            {
-              id: 'next',
-              title: 'Next',
-            },
-          ]
-        }
-      ]
-    });
-    LocalNotifications.addListener('localNotificationActionPerformed', (notification: LocalNotificationActionPerformed) => {
-      console.log(notification.inputValue)
-      switch(notification.actionId){
-        case 'play':
-          this.togglePlayer(this.isPlaying);
-          break;
-        case 'prev':
-          this.prev();
-          break;
-        case 'next':
-          this.next();
-          break;
-        default:
-          break;
-      }
-    });
-    if(this.plt.is('android')){
-      // Creating channel without vibration
-      LocalNotifications.createChannel({
-        id: 'yt-chanel',
-        importance: 1,
-        name: 'yt-download',
-        sound: null,
-        vibration: false,
-        lights: false,
-        visibility: 1
-      });
-      CapacitorMusicControls.addListener('controlsNotification', (action: any) => {
-        const message = action.message;
-        switch(message) {
-          case 'music-controls-next':
-            this.next();
-            break;
-          case 'music-controls-previous':
-            this.prev();
-            break;
-          case 'music-controls-pause':
-            this.togglePlayer(true);
-            break;
-          case 'music-controls-play':
-            this.togglePlayer(false);
-            break;
-          case 'music-controls-destroy':
-            this.player.pause();
-            this.isPlaying = false;
-            CapacitorMusicControls.updateIsPlaying({
-              isPlaying: false, // affects Android only
-            });
-            break;
-          // External controls (iOS only)
-          case 'music-controls-toggle-play-pause' :
-            if(this.isPlaying){
-              this.player.pause();
-              this.isPlaying = false;
-              CapacitorMusicControls.updateIsPlaying({
-                isPlaying: false, // affects Android only
-              });
-            }else{
-              this.player.play();
-              this.isPlaying = true;
-              CapacitorMusicControls.updateIsPlaying({
-                isPlaying: true, // affects Android only
-              });
-            }
-            break;
-          case 'music-controls-seek-to':
-            const seekToInSeconds = JSON.parse(action).position;
-            this.seekMore();
-            // Do something
-            break;
-          case 'music-controls-skip-forward':
-            // Do something
-            this.next();
-            break;
-          case 'music-controls-skip-backward':
-            // Do something
-            this.prev();
-            break;
-          // Headset events (Android only)
-          // All media button events are listed below
-          case 'music-controls-media-button' :
-            if(this.isPlaying){
-              this.player.pause();
-              this.isPlaying = false;
-              CapacitorMusicControls.updateIsPlaying({
-                isPlaying: false, // affects Android only
-              });
-            }else{
-              this.player.play();
-              this.isPlaying = true;
-              CapacitorMusicControls.updateIsPlaying({
-                isPlaying: true, // affects Android only
-              });
-            }
-            break;
-          case 'music-controls-headset-unplugged':
-            // Do something
-            this.player.pause();
-            this.isPlaying = false;
-            break;
-          case 'music-controls-headset-plugged':
-            this.player.play();
-            this.isPlaying = true;
-            break;
-          default:
-            break;
-        }
-      }, success=>{
-        console.log(success);
-      }, error=>{
-        console.log(error);
-      });
-    }
+  ngOnInit(){
+    // if(this.plt.is('android') === true){
+    //   await LocalNotifications.requestPermission();
+    //   // Creating buttons below notification
+    //   LocalNotifications.registerActionTypes({
+    //     types:[
+    //       {
+    //         id: 'sound-background',
+    //         actions: [
+    //           {
+    //             id: 'prev',
+    //             title: 'Prev',
+    //           },
+    //           {
+    //             id: 'play',
+    //             title: 'Play',
+    //           },
+    //           {
+    //             id: 'next',
+    //             title: 'Next',
+    //           },
+    //         ]
+    //       }
+    //     ]
+    //   });
+    //   LocalNotifications.addListener('localNotificationActionPerformed', (notification: LocalNotificationActionPerformed) => {
+    //     console.log(notification.inputValue)
+    //     switch(notification.actionId){
+    //       case 'play':
+    //         this.togglePlayer(this.isPlaying);
+    //         break;
+    //       case 'prev':
+    //         this.prev();
+    //         break;
+    //       case 'next':
+    //         this.next();
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   });
+    //   // Creating channel without vibration
+    //   LocalNotifications.createChannel({
+    //     id: 'yt-chanel',
+    //     importance: 1,
+    //     name: 'yt-download',
+    //     sound: null,
+    //     vibration: false,
+    //     lights: false,
+    //     visibility: 1
+    //   });
+    //   CapacitorMusicControls.addListener('controlsNotification', (action: any) => {
+    //     const message = action.message;
+    //     switch(message) {
+    //       case 'music-controls-next':
+    //         this.next();
+    //         break;
+    //       case 'music-controls-previous':
+    //         this.prev();
+    //         break;
+    //       case 'music-controls-pause':
+    //         this.togglePlayer(true);
+    //         break;
+    //       case 'music-controls-play':
+    //         this.togglePlayer(false);
+    //         break;
+    //       case 'music-controls-destroy':
+    //         this.player.pause();
+    //         this.isPlaying = false;
+    //         CapacitorMusicControls.updateIsPlaying({
+    //           isPlaying: false, // affects Android only
+    //         });
+    //         break;
+    //       // External controls (iOS only)
+    //       case 'music-controls-toggle-play-pause' :
+    //         if(this.isPlaying){
+    //           this.player.pause();
+    //           this.isPlaying = false;
+    //           CapacitorMusicControls.updateIsPlaying({
+    //             isPlaying: false, // affects Android only
+    //           });
+    //         }else{
+    //           this.player.play();
+    //           this.isPlaying = true;
+    //           CapacitorMusicControls.updateIsPlaying({
+    //             isPlaying: true, // affects Android only
+    //           });
+    //         }
+    //         break;
+    //       case 'music-controls-seek-to':
+    //         const seekToInSeconds = JSON.parse(action).position;
+    //         this.seekMore();
+    //         // Do something
+    //         break;
+    //       case 'music-controls-skip-forward':
+    //         // Do something
+    //         this.next();
+    //         break;
+    //       case 'music-controls-skip-backward':
+    //         // Do something
+    //         this.prev();
+    //         break;
+    //       // Headset events (Android only)
+    //       // All media button events are listed below
+    //       case 'music-controls-media-button' :
+    //         if(this.isPlaying){
+    //           this.player.pause();
+    //           this.isPlaying = false;
+    //           CapacitorMusicControls.updateIsPlaying({
+    //             isPlaying: false, // affects Android only
+    //           });
+    //         }else{
+    //           this.player.play();
+    //           this.isPlaying = true;
+    //           CapacitorMusicControls.updateIsPlaying({
+    //             isPlaying: true, // affects Android only
+    //           });
+    //         }
+    //         break;
+    //       case 'music-controls-headset-unplugged':
+    //         // Do something
+    //         this.player.pause();
+    //         this.isPlaying = false;
+    //         break;
+    //       case 'music-controls-headset-plugged':
+    //         this.player.play();
+    //         this.isPlaying = true;
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   }, success=>{
+    //     console.log(success);
+    //   }, error=>{
+    //     console.log(error);
+    //   });
+    // }
     this.segment.value = 'songs';
   }
   segmentChanged(ev: any){
     this.showing = ev.detail.value;
   }
   searchSong(){
-    this.searchSongs = this.songs.filter(song => song.title.toLowerCase().includes(this.querySong));
+    if(this.querySong.length > 0){
+      this.searchSongs = this.songs.filter(song => song.title.toLowerCase().includes(this.querySong));
+    } else {
+      this.searchSongs = [];
+    }
   }
   searchVideo(){
     this.searchVideos = this.videos.filter(video => video.title.toLowerCase().includes(this.queryVideo));
@@ -251,9 +255,12 @@ export class Tab3Page implements OnInit{
     this.segment.value = view;
   }
   start(song: any){
+    this.lyrics = 'Loading ....';
     this.songsv.getLyrics(song).subscribe(resp =>{
       if(resp['lyrics']){
         this.lyrics = '<table>'+resp['lyrics'].split('\n').map( row => '<tr><td>'+row+'</td><tr>').join('')+'</table>';
+      }else {
+        this.lyrics ='Error!';
       }
     }, err=>{
       console.log(err);
@@ -287,53 +294,53 @@ export class Tab3Page implements OnInit{
       }
     });
     this.player.play();
-    if(this.plt.is('android')){
-      CapacitorMusicControls.create({
-        track: song.title,		// optional, default : ''
-        artist: song.artist,						// optional, default : ''
-        album: 'YT-DOWNLOAD',     // optional, default: ''
-        cover: song.imagePath,
-        isPlaying: true,
-        dismissable: true,
-        hasPrev: true,      // show previous button, optional, default: true
-        hasNext: true,      // show next button, optional, default: true
-        hasClose  : false,       // show close button, optional, default: false
-      // iOS only, optional
-        hasSkipForward : true,  // show skip forward button, optional, default: false
-        hasSkipBackward : true, // show skip backward button, optional, default: false
-        hasScrubbing: false, // enable scrubbing from control center and lockscreen progress bar, optional
-        // Android only, optional
-        ticker: `Now Playing "${song.title} - ${song.artist}"`,
-        // text displayed in the status bar when the notification (and the ticker) are updated, optional
-        // All icons default to their built-in android equivalents
-        playIcon: 'media_play',
-        pauseIcon: 'media_pause',
-        prevIcon: 'media_prev',
-        nextIcon: 'media_next',
-        closeIcon: 'media_close',
-        notificationIcon: 'notification'
-      });
-      CapacitorMusicControls.updateIsPlaying({
-        isPlaying: true, // affects Android only
-      });
-    }
+    // if(this.plt.is('android')){
+    //   CapacitorMusicControls.create({
+    //     track: song.title,		// optional, default : ''
+    //     artist: song.artist,						// optional, default : ''
+    //     album: 'YT-DOWNLOAD',     // optional, default: ''
+    //     cover: song.imagePath,
+    //     isPlaying: true,
+    //     dismissable: true,
+    //     hasPrev: true,      // show previous button, optional, default: true
+    //     hasNext: true,      // show next button, optional, default: true
+    //     hasClose  : false,       // show close button, optional, default: false
+    //   // iOS only, optional
+    //     hasSkipForward : true,  // show skip forward button, optional, default: false
+    //     hasSkipBackward : true, // show skip backward button, optional, default: false
+    //     hasScrubbing: false, // enable scrubbing from control center and lockscreen progress bar, optional
+    //     // Android only, optional
+    //     ticker: `Now Playing "${song.title} - ${song.artist}"`,
+    //     // text displayed in the status bar when the notification (and the ticker) are updated, optional
+    //     // All icons default to their built-in android equivalents
+    //     playIcon: 'media_play',
+    //     pauseIcon: 'media_pause',
+    //     prevIcon: 'media_prev',
+    //     nextIcon: 'media_next',
+    //     closeIcon: 'media_close',
+    //     notificationIcon: 'notification'
+    //   });
+    //   CapacitorMusicControls.updateIsPlaying({
+    //     isPlaying: true, // affects Android only
+    //   });
+    // }
   }
   togglePlayer(pause: boolean){
     this.isPlaying = !pause;
     if (pause) {
       this.player.pause();
-      if(this.plt.is('android')){
-        CapacitorMusicControls.updateIsPlaying({
-          isPlaying: false, // affects Android only
-        });
-      }
+      // if(this.plt.is('android')){
+      //   CapacitorMusicControls.updateIsPlaying({
+      //     isPlaying: false, // affects Android only
+      //   });
+      // }
     } else {
       this.player.play();
-      if(this.plt.is('android')){
-        CapacitorMusicControls.updateIsPlaying({
-          isPlaying: true, // affects Android only
-        });
-      }
+      // if(this.plt.is('android')){
+      //   CapacitorMusicControls.updateIsPlaying({
+      //     isPlaying: true, // affects Android only
+      //   });
+      // }
     }
   }
   prev(){

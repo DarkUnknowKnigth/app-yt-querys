@@ -1,3 +1,17 @@
+// valiables
+$img-radius: 10px;
+ion-item-group{
+  ion-item:nth-child(1){
+    border-radius: var(--radius);
+  }
+  ion-item:nth-child(2){
+    border-radius: var(--radius-inverse);
+  }
+}
+img{
+  border-radius: $img-radius;
+}
+
 .song {
   text-align: center;
   width: 100%;
@@ -68,6 +82,82 @@
 .mobile {
   display: none;
 }
+ion-select {
+  width: 100%;
+  justify-content: center;
+}
+.list-image-song{
+  margin-top: .5rem;
+}
+ion-button{
+  --box-shadow:none;
+}
+
+ion-footer{
+  ion-toolbar{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: var(--ion-color-primary);
+    transform: translateY(0px);
+    border-radius: var(--radius);
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-bottom: 70px;
+    .player-wrapper{
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-row: 56px;
+      align-items: center;
+      .player-img{
+        grid-column: 1/3;
+        grid-row: 1;
+        overflow: hidden;
+        margin: auto 0;
+        margin-left: 0;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .player-info{
+        grid-column: 3/8;
+        grid-row: 1;
+        width: 100%;
+        overflow: hidden;
+        text-align: left;
+        margin: auto 10px;
+        display: inline-block;
+        span{
+          color: var(--ion-color-light);
+          font-size: .8em;
+          width: max-content;
+          text-overflow: ellipsis;
+          display: block;
+          font-weight: normal; 
+        }
+        small{
+          color: var(--ion-color-dark);
+        }
+      }
+      .end{
+        grid-column: 8;
+        grid-row: 1;
+        position: relative;
+        top: 0;
+        right: 0;
+      }
+    }
+    .progress-bar-player{
+      height: 2px;
+    }
+  }
+}
+
+
 // Phones
 @media only screen and (max-width: 700px){
   .full {
@@ -157,41 +247,5 @@
   }
   .btn-player {
     width: 100%;
-  }
-}
-ion-select {
-  width: 100%;
-  justify-content: center;
-}
-.list-image-song{
-  margin-top: .5rem;
-}
-ion-button{
-  --box-shadow:none;
-}
-.mini-player-img{
-  z-index: 2;
-  width:100px !important; 
-  height:70px !important;
-  margin: 0;
-  margin-left: 0;
-  left: 0;
-}
-.wrapper-mini-player{
-  text-align: left;
-  margin: 1rem 0;
-  display: inline-block;
-  span{
-    margin-top: 0.5rem;
-    margin-bottom: -1rem;;
-    width: max-content;
-    padding:0 1rem;
-    text-overflow: ellipsis;
-    display: block;
-    font-weight: normal; 
-  }
-  small{
-    padding: 0 1rem;
-    color:#7670FF;
   }
 }

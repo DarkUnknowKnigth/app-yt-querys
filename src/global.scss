@@ -24,12 +24,19 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
-
+ion-mat-card{
+    border-radius: var(--radius);
+}
 .is-mobile{
     display: flex;
 }
 @media screen and (max-width:700px){
     .is-mobile{
         display: none;
+    }
+}
+ion-alert{
+    button{
+        color: white !important;
     }
 }

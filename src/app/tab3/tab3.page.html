@@ -14,19 +14,19 @@
   </ion-toolbar>
   <!-- <ion-toolbar>
     <ion-buttons slot="secondary">
-      <ion-button color="tertiary" (click)="show('songs')">
+      <ion-button color="primary" (click)="show('songs')">
         Music<ion-icon slot="start" name="musical-notes-outline"></ion-icon>
       </ion-button>
-      <ion-button color="tertiary" (click)="show('videos')">
+      <ion-button color="primary" (click)="show('videos')">
         Video<ion-icon slot="start" name="server-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button *ngIf="showing == 'player'" slot="start" color="tertiary" (click)="showing == 'player' ? showing='songs': showing ='player'">
+      <ion-button *ngIf="showing == 'player'" slot="start" color="primary" (click)="showing == 'player' ? showing='songs': showing ='player'">
         List
         <ion-icon name="list" slot="start"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="showing != 'player'" slot="start" color="tertiary" (click)="showing == 'player' ? showing='songs': showing ='player'">
+      <ion-button *ngIf="showing != 'player'" slot="start" color="primary" (click)="showing == 'player' ? showing='songs': showing ='player'">
         <ion-icon name="play-circle" slot="start"></ion-icon>
         Player
       </ion-button>
@@ -37,7 +37,7 @@
 <ion-content [fullscreen]="true" #content>
   <ion-header collapse="condense">
     <ion-toolbar color="none">
-      <ion-title size="large" color="tertiary">Player</ion-title>
+      <ion-title size="large" color="primary">Player</ion-title>
     </ion-toolbar>
   </ion-header>
     <ion-row>
@@ -70,7 +70,7 @@
       <ion-col size="12" size-md *ngIf="showing=='player'">
         <ion-img [src]="playingSong.id? bigCover() : '/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable cover-player" onerror="this.onerror=null; this.src='/assets/images/song.png'">
         </ion-img>
-        <ion-card class="full" style="opacity: 0.90;">
+        <ion-card class="full" style="opacity:0.9">
           <ion-card-header>
             <ion-label>{{playingSong.title}}</ion-label><br>
             <small>{{playingSong.artist}}</small>
@@ -99,7 +99,7 @@
                   </ion-label>
                 </ion-col>
                 <ion-col size="8" class="ion-margin-top">
-                  <ion-range color="tertiary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
+                  <ion-range color="primary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
                 </ion-col>
                 <ion-col size="2" class="ion-text-center">
                   <ion-label>                    
@@ -109,11 +109,10 @@
               </ion-row>
           </ion-card-content>
         </ion-card>
-        <ion-card *ngIf="showLyrics">
+        <ion-card *ngIf="showLyrics" color="primary">
           <ion-card-header>
             <ion-item>
               <ion-label>{{playingSong.title}} <small>{{playingSong.artist}}</small></ion-label>
-              
               <ion-button (click)="showLyrics = false" slot="end" color="danger">
                 <ion-icon name="close"></ion-icon>
               </ion-button>
@@ -132,25 +131,22 @@
             <ion-input type="text" placeholder="Search songs" (keyup)="searchSong()" [(ngModel)]="querySong"></ion-input>
           </ion-item>
           <div *ngIf="searchSongs.length > 0">
-            <ion-item-group *ngFor="let song of searchSongs">
-              <ion-item lines="none" (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
-                <!-- <ion-thumbnail slot="start">
-                  <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
-                </ion-thumbnail> -->
-                <ion-label>{{song.title}}</ion-label>
-              </ion-item>
-              <ion-item lines="full">
+            <ion-item *ngFor="let song of searchSongs" lines="none" (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable">
+              <!-- <ion-thumbnail slot="start">
+                <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
+              </ion-thumbnail> -->
+              <ion-label>{{song.title}}</ion-label>
+              <ion-button slot="end" color="primary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
+            </ion-item>
+            <!-- <ion-item-group >
+              <ion-item lines="none" >
                 <ion-button slot="end" color="light">
                   <ion-label>{{song.duration}}</ion-label>
                 </ion-button>
-                <!-- <ion-button slot="end" color="success" size="small"  (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
-                  <ion-icon name="play-outline" *ngIf="playingSong.id !== song.id"></ion-icon>
-                  <ion-icon name="pause-outline" *ngIf="playingSong.id === song.id"></ion-icon>
-                </ion-button> -->
-                <ion-button slot="end" color="tertiary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
+                <ion-button slot="end" color="primary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
                 <ion-button slot="end" color="danger" size="small" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
               </ion-item>
-            </ion-item-group>
+            </ion-item-group> -->
           </div>
           <ion-item *ngIf="searchSongs.length <= 0 && querySong.length>0">
             No results 🤔🤔
@@ -177,7 +173,7 @@
                 <br><small>{{song.artist}}</small>
               </p>
             </ion-item>
-            <ion-item lines="full" [color]="playingSong.id === song.id?'tertiary':''">
+            <ion-item lines="none"  [color]="playingSong.id === song.id?'light':''">
               <ion-button slot="end" color="success">
                 <ion-label class="notMobile">On server</ion-label>
                 <ion-label class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
@@ -185,12 +181,12 @@
               <ion-button slot="end" color="light">
                 <ion-label>{{song.duration}}</ion-label>
               </ion-button>
-              <!-- <ion-button slot="end" color="tertiary" size="small"  (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
+              <!-- <ion-button slot="end" color="primary" size="small"  (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
                 <ion-icon name="play-outline" *ngIf="playingSong.id !== song.id"></ion-icon>
                 <ion-icon name="pause-outline" *ngIf="playingSong.id === song.id && isPlaying"></ion-icon>
                 <ion-icon name="play-outline" *ngIf="playingSong.id === song.id && !isPlaying"></ion-icon>
               </ion-button> -->
-              <ion-button slot="end" color="tertiary"(click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="primary"(click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="warning" (click)="updatingSong = song; updating = true; " *ngIf="user.role==666"><ion-icon name="create-outline"></ion-icon></ion-button>
             </ion-item>
@@ -227,12 +223,12 @@
       <ion-col size="12" *ngIf="showing=='videos'">
         <!-- Search bar video -->
       <ion-list>
-        <ion-item lines="full">
+        <ion-item lines="none" >
           <ion-label position="floating">Search</ion-label>
           <ion-input type="text" placeholder="Search videos" (keyup)="searchVideo()" [(ngModel)]="queryVideo"></ion-input>
         </ion-item>
         <div *ngIf="searchVideos.length > 0">
-          <ion-item-group *ngFor="let video of videos" lines="none">
+          <ion-item-group *ngFor="let video of videos" color="primary">
             <ion-item lines="none">
               <ion-thumbnail slot="start">
                 <img [src]="video.imagePath? video.imagePath:'/assets/images/video.png'"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
@@ -243,11 +239,11 @@
               <ion-select placeholder="Resolutions" [(ngModel)]="resolution">
                 <ion-select-option *ngFor="let re of video.resolutions" [value]="re">{{re}}p</ion-select-option>
               </ion-select>
-              <ion-button slot="end" color="tertiary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="primary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
         </div>
-        <ion-item *ngIf="searchSongs.length <= 0 && queryVideo.length > 1">
+        <ion-item *ngIf="searchVideos.length <= 0 && queryVideo.length > 1">
           No results 🤔🤔
         </ion-item>
       </ion-list>
@@ -271,13 +267,13 @@
                 <ion-select-option *ngFor="let re of video.resolutions" [value]="re">{{re}}p</ion-select-option>
               </ion-select>
             </ion-item> -->
-            <ion-item lines="full">
+            <ion-item lines="none" >
               <ion-label color="success" class="notMobile">Avalible to download</ion-label>
               <ion-label color="success" class="mobile"><ion-icon name="server-outline"></ion-icon></ion-label>
               <ion-button slot="end" color="light">
                 <ion-label>{{video.duration}}</ion-label>
               </ion-button>
-              <ion-button slot="end" color="tertiary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
+              <ion-button slot="end" color="primary" size="small" (click)="download(video,'video')"><ion-icon name="download-outline"></ion-icon></ion-button>
               <ion-button slot="end" color="danger" size="small" (click)="deleteVideo(video)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
             </ion-item>
           </ion-item-group>
@@ -285,40 +281,48 @@
       </ion-col>
     </ion-row>
     <!-- Floating accion buttons shuffle and play -->
-    <ion-fab *ngIf="playingSong.id && showing != 'player'" vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="togglePlayer(isPlaying)" color="tertiary">
+    <!-- <ion-fab *ngIf="playingSong.id && showing != 'player'" vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="togglePlayer(isPlaying)" color="primary">
         <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
         <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
       </ion-fab-button>
-    </ion-fab>
+    </ion-fab> -->
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="showing == 'player'">
-      <ion-fab-button [color]="isRandom?'danger':'tertiary'" (click)="isRandom = !isRandom">
+      <ion-fab-button [color]="isRandom?'danger':'primary'" (click)="isRandom = !isRandom">
         <ion-icon name="shuffle-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
     <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="start" slot="fixed">
-      <ion-fab-button (click)="repeating = !repeating" [color]="repeating?'danger':'tertiary'">
+      <ion-fab-button (click)="repeating = !repeating" [color]="repeating?'danger':'primary'">
         <ion-icon name="repeat-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="center" slot="fixed">
-      <ion-fab-button (click)="showLyrics = !showLyrics" color="tertiary">
+    <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="center" slot="fixed" style="padding-bottom:20px;">
+      <ion-fab-button (click)="showLyrics = !showLyrics" color="primary">
         <ion-icon name="reader-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
 </ion-content>
 <!-- player in backgound -->
-<ion-footer *ngIf="showing !== 'player'" style="margin-left:0; margin-right: 0;">
-  <ion-toolbar  *ngIf="playingSong.id" style="margin-left:0; margin-right: 0;">
+<ion-footer *ngIf="playingSong.id && showing !== 'player'" style="margin-left:0; margin-right: 0;" class="player-bottom">
+  <ion-toolbar  *ngIf="playingSong.id" color="tertiary">
     <ion-item-sliding>
-      <ion-item (click)="show('player')" class="touchable" lines="none">
-        <img class="mini-player-img" [src]="playingSong.imagePath" (click)="show('player')">
-        <div class="wrapper-mini-player">
-          <span id="title-mini">{{playingSong.title}}</span><br>
-          <small>{{playingSong.artist}}</small>
+      <ion-item color="tertiary" class="touchable" lines="none">
+        <div class="player-wrapper">
+          <div class="player-img">
+            <img [src]="playingSong.imagePath">
+          </div>
+          <div class="player-info" (click)="show('player')">
+            <span id="title-mini">{{playingSong.title}}</span>
+            <small>{{playingSong.artist}}</small>
+          </div>
+          <ion-button size="large" class="end" *ngIf="playingSong.id && showing != 'player'" (click)="togglePlayer(isPlaying)" color="tertiary">
+              <ion-icon slot="icon-only" *ngIf="!isPlaying" name="play-outline"></ion-icon>
+              <ion-icon slot="icon-only" *ngIf="isPlaying" name="pause-outline"></ion-icon>
+          </ion-button>
         </div>
       </ion-item>
-      <ion-progress-bar color="primary" [value]="progress*0.01" color="tertiary" class="progress-mini"></ion-progress-bar>
+      <ion-progress-bar color="primary" [value]="progress*0.01" class="progress-bar-player"></ion-progress-bar>
       <ion-item-options side="start">
         <ion-item-option (click)="prev()" color="tertiary">
           <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
@@ -326,12 +330,12 @@
         <ion-item-option color="danger" (click)="seekLess()">
           <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
         </ion-item-option>
-        <ion-item-option [color]="repeating?'danger':'tertiary'" (click)="repeating = !repeating">
+        <ion-item-option [color]="repeating?'primary':'tertiary'" (click)="repeating = !repeating">
           <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
       <ion-item-options side="end">
-        <ion-item-option [color]="isRandom?'danger':'tertiary'" (click)="isRandom = !isRandom">
+        <ion-item-option [color]="isRandom?'primary':'tertiary'" (click)="isRandom = !isRandom">
           <ion-icon slot="icon-only" name="shuffle-outline"></ion-icon>
         </ion-item-option>
         <ion-item-option color="success" (click)="seekMore()">

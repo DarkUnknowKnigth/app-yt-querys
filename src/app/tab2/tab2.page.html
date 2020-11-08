@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title slot="end" color="tertiary" size="large">
+    <ion-title slot="end" size="large">
       <ion-icon name="cloud-download-outline"></ion-icon>
       <ion-label>
         Download
@@ -12,7 +12,7 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" color="tertiary">Downloader</ion-title>
+      <ion-title size="large" color="primary">Downloader</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-list>
@@ -22,7 +22,7 @@
     </ion-item>
     <ion-item lines="input">
       <ion-label position="floating">Select media type</ion-label>
-      <ion-select placeholder="Type" [(ngModel)]="type">
+      <ion-select placeholder="Type" [(ngModel)]="type" color="light">
         <ion-select-option value="video">Video</ion-select-option>
         <ion-select-option value="audio">Audio</ion-select-option>
       </ion-select>
@@ -37,15 +37,21 @@
       </ion-select>
     </ion-item>
     <ion-item lines="none">
-      <ion-button slot="end" size="medium" color="tertiary" (click)="download()" [disabled]="!downloaded || type.length < 4">
-        <ion-icon slot="start" name="download"></ion-icon>
-        <ion-label>Download</ion-label> 
+      <ion-button slot="end" size="small" color="dark" onclick="window.open('https://github.com/DarkUnknowKnigth/')">
+        <ion-icon slot="icon-only" name="logo-github"></ion-icon>
+        <!-- <ion-label>GitHub</ion-label> -->
       </ion-button>
-      <ion-button slot="end" size="medium" color="tertiary" onclick="window.open('https://github.com/DarkUnknowKnigth/')">
-        <ion-icon name="logo-github"  size="medium"></ion-icon>
+      <ion-button slot="end" size="small" color="danger" (click)="help = true">
+        <ion-icon slot="icon-only" name="help"></ion-icon>
+        <!-- <ion-label>Help</ion-label> -->
       </ion-button>
-      <ion-button slot="end" size="medium" color="tertiary" (click)="help = true">
-        <ion-icon name="help"  size="medium"></ion-icon>
+      <ion-button slot="end" size="small" color="primary" (click)="download()" [disabled]="!downloaded || type.length < 4">
+        <ion-icon slot="icon-only" name="cloud"></ion-icon>
+        <!-- <ion-label>Save</ion-label>  -->
+      </ion-button>
+      <ion-button slot="end" size="small" color="secondary" (click)="download(true)" [disabled]="!downloaded || type.length < 4">
+        <ion-icon slot="icon-only" name="download"></ion-icon>
+        <!-- <ion-label>Download</ion-label>  -->
       </ion-button>
     </ion-item>
     <ion-card *ngIf="help">
@@ -63,7 +69,7 @@
          <li>Download !!! / Descargalo !!! 🔽 </li>
        </ol>
        <ion-item lines="none">
-        <ion-button slot="end" size="medium" color="tertiary" (click)="help = false">
+        <ion-button slot="end" size="medium" color="primary" (click)="help = false">
           Okey
         </ion-button>
        </ion-item>
@@ -78,4 +84,9 @@
       </ion-item>
     </ion-item-group>
   </ion-list>
+  <div class="main-logo">
+    <h2>DWN-TUBE</h2>
+    <h3><small>Just Take It</small></h3>
+    <ion-img src="../../assets/icons/1024.png" class="logo"></ion-img>
+  </div>
 </ion-content>
