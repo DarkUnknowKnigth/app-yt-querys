@@ -18,26 +18,6 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
-  <!-- <ion-toolbar>
-    <ion-buttons slot="secondary">
-      <ion-button color="primary" (click)="show('songs')">
-        Music<ion-icon slot="start" name="musical-notes-outline"></ion-icon>
-      </ion-button>
-      <ion-button color="primary" (click)="show('videos')">
-        Video<ion-icon slot="start" name="server-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="showing == 'player'" slot="start" color="primary" (click)="showing == 'player' ? showing='songs': showing ='player'">
-        List
-        <ion-icon name="list" slot="start"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="showing != 'player'" slot="start" color="primary" (click)="showing == 'player' ? showing='songs': showing ='player'">
-        <ion-icon name="play-circle" slot="start"></ion-icon>
-        Player
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar> -->
 </ion-header>
 
 <ion-content [fullscreen]="true" #content>
@@ -47,34 +27,74 @@
     </ion-toolbar>
   </ion-header>
   <ion-row>
-    <!-- Audio Player -->
-    <!-- <ion-col size="12" size-md *ngIf="showing=='player'" class="notMobile bg-wrapper">
-      <div class="player-wrapper">
-        <ion-img [src]="playingSong.imagePath" (click)="togglePlayer(isPlaying)" class="touchable cover-player"></ion-img>
-        <ion-toolbar class="notMobile controls-player " *ngIf="playingSong.id">
-          <ion-title class="ion-text-center ion-margin-top ion-margin-bottom">
-            <ion-label style="margin-left:0px; width:400px">{{playingSong.title}} <br> <small>{{playingSong.artist}}</small> </ion-label>
-          </ion-title>
-          <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="prev()">
-            <ion-icon name="play-skip-back-outline"></ion-icon>
-          </ion-button>
-          <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="togglePlayer(isPlaying)" >
-            <ion-icon *ngIf="!isPlaying" name="play-outline"></ion-icon>
-            <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
-          </ion-button>
-          <ion-button class="btn-player" fill="clear" size="large" color="dark" (click)="next()">
-            <ion-icon name="play-skip-forward-outline"></ion-icon>
-          </ion-button>
-          <ion-item>
-            <ion-range color="dark" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()"></ion-range>
-            <ion-label style="margin-left:10%;">{{displayProgress}}</ion-label>
-          </ion-item>
-        </ion-toolbar>
-      </div>
-    </ion-col> -->
-    <!-- Audio player mobile -->
+    <!-- Audio player large -->
     <ion-col size="12" size-md *ngIf="showing=='player' && playingSong.id">
-      <ion-img [src]="playingSong.id? bigCover() : '/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable cover-player" onerror="this.onerror=null; this.src='/assets/images/song.png'">
+       <!-- lyrics helper -->
+       <ion-card *ngIf="showLyrics" color="primary">
+        <ion-card-header>
+          <ion-item>
+            <ion-label><b>{{playingSong.title}}</b> <small>{{playingSong.artist}}</small></ion-label>
+            <ion-button (click)="showLyrics = false" slot="end" color="danger">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-card-header>
+        <ion-card-content>
+          <p [innerHTML] = "lyrics" style="display: block; height: 50vh !important; overflow-y: scroll !important;"></p>
+        </ion-card-content>
+      </ion-card>
+      <div class="grid-player">
+        <!-- List of songs with preview -->
+        <div class="showcase">
+          <figure>
+            <ion-img [src]="linksCover[0]" (click)="togglePlayer(isPlaying)" class="touchable" onerror="this.onerror=null; this.src='/assets/images/song.png'"></ion-img>
+            <ion-img [src]="linksCover[1]" (click)="togglePlayer(isPlaying)" class="touchable" onerror="this.onerror=null; this.src='/assets/images/song.png'"></ion-img>
+            <ion-img [src]="linksCover[2]" (click)="togglePlayer(isPlaying)" class="touchable" onerror="this.onerror=null; this.src='/assets/images/song.png'"></ion-img>
+          </figure>
+          <br>
+          <b>
+            {{playingSong.title}}
+          </b>
+          <br>
+          <small>
+            {{playingSong.artist}}
+          </small>
+        </div>
+        <!-- Actions -->
+       <div class="actions">
+        <ion-button (click)="showLyrics = !showLyrics" color="none" size="large">
+          <ion-icon slot="icon-only" name="reader-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="copyClipboard(playingSong.path)" color="none" size="large">
+          <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="download(playingSong,'audio')" color="none" size="large">
+          <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+        </ion-button>
+      </div>
+       <!-- ProgressBar Cool -->
+        <ion-range color="primary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()" class="progress"></ion-range>
+        <!-- Player controls -->
+        <div class="controls">
+          <ion-button [color]="repeating?'danger':'none'" (click)="repeating = !repeating" size="medium">
+            <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="prev()" color="none" size="medium">
+            <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
+          </ion-button>
+          <ion-button class="end" (click)="togglePlayer(isPlaying)" size="large">
+            <ion-icon slot="icon-only" *ngIf="!isPlaying" name="play-outline"></ion-icon>
+            <ion-icon slot="icon-only" *ngIf="isPlaying" name="pause-outline"></ion-icon>
+          </ion-button>
+          <ion-button color="none" (click)="next()" size="medium">
+            <ion-icon slot="icon-only" name="play-skip-forward-outline"></ion-icon>
+          </ion-button>
+          <ion-button [color]="isRandom?'danger':'none'" (click)="isRandom = !isRandom" size="medium">
+            <ion-icon slot="icon-only" name="shuffle-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <!-- <ion-img [src]="playingSong.id? bigCover() : '/assets/images/song.png'" (click)="togglePlayer(isPlaying)" class="touchable cover-player" onerror="this.onerror=null; this.src='/assets/images/song.png'">
       </ion-img>
       <ion-card class="full" style="opacity:0.9">
         <ion-card-header>
@@ -114,21 +134,9 @@
               </ion-col>
             </ion-row>
         </ion-card-content>
-      </ion-card>
-      <ion-card *ngIf="showLyrics" color="primary">
-        <ion-card-header>
-          <ion-item>
-            <ion-label>{{playingSong.title}} <small>{{playingSong.artist}}</small></ion-label>
-            <ion-button (click)="showLyrics = false" slot="end" color="danger">
-              <ion-icon name="close"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </ion-card-header>
-        <ion-card-content>
-          <p [innerHTML] = "lyrics" style="display: block; height: 50vh !important; overflow-y: scroll !important;"></p>
-        </ion-card-content>
-      </ion-card>
+      </ion-card> -->
     </ion-col>
+    <!-- player fallback if not song playing  -->
     <ion-col size="12" *ngIf="showing=='player' && !playingSong.id" style="text-align:center; margin-top: 3em;">
       <span style="font-size: 4em;">
         DWN - TUBE
@@ -145,16 +153,11 @@
       <ion-list>
         <ion-item lines="none">
           <ion-searchbar animated (keyup)="searchSong()" [(ngModel)]="querySong"></ion-searchbar>
-          <!-- <ion-label position="floating">Search</ion-label> -->
-          <!-- <ion-input type="text" placeholder="Search songs" (keyup)="searchSong()" [(ngModel)]="querySong"></ion-input> -->
         </ion-item>
         <div *ngIf="searchSongs.length > 0">
           <ion-item *ngFor="let song of searchSongs" lines="none" (click)=" (playingSong.id === song.id? togglePlayer(isPlaying) : start(song)); searchSongs=[]; querySong='';" class="touchable">
-            <!-- <ion-thumbnail slot="start">
-              <img [src]="song.imagePath? song.imagePath:'/assets/images/song.png'"  class="list-image-song">
-            </ion-thumbnail> -->
             <ion-label>{{song.title}}</ion-label>
-            <ion-button slot="end" color="primary" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
+            <ion-button slot="end" color="none" size="small" (click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
           </ion-item>
           <!-- <ion-item-group >
             <ion-item lines="none" >
@@ -181,8 +184,30 @@
             <img src="/assets/images/loading.gif" alt="loading" class="loading" width="100%">
           </ion-item>
         </ion-item-group>
-        <ion-item-group *ngFor="let song of songs">
-          <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [color]="playingSong.id === song.id?'secondary':''">
+        <ion-item *ngFor="let song of songs" class="touchable" lines="none" [ngClass]="playingSong.id === song.id?'sexy':''">
+          <ion-thumbnail slot="start" *ngIf="playingSong.id === song.id">
+            <img [src]="playingSong.id === song.id? song.imagePath:''" onerror="this.onerror=null; this.src='/assets/images/song.png'">
+          </ion-thumbnail>
+          <p style="width: 100%; height: 90%;" (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
+            <b>
+              {{song.title}}
+            </b>
+            <br>
+            <small>
+              {{song.artist}}
+            </small>
+          </p>
+          <ion-buttons collapse="true" slot="end">
+            <ion-button slot="end" color="none">
+              {{song.duration}}
+            </ion-button>
+            <ion-button slot="end" color="none" (click)="presentActionSheet(song)">
+              <ion-icon slot="icon-only" size="small" name="menu-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item>
+        <!-- <ion-item-group *ngFor="let song of songs">
+          <ion-item (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)" class="touchable" lines="none" [ngStyle]="{'box-shadow':playingSong.id === song.id?'0px -1px rgba(0, 0, 0, var(--shadow))':''}">
             <ion-thumbnail slot="start" *ngIf="playingSong.id === song.id">
               <img [src]="playingSong.id === song.id? song.imagePath:''"  class="list-image-song"  onerror="this.onerror=null; this.src='/assets/images/song.png'">
             </ion-thumbnail>
@@ -199,51 +224,39 @@
             <ion-button slot="end" color="light">
               <ion-label>{{song.duration}}</ion-label>
             </ion-button>
-            <!-- <ion-button slot="end" color="primary" size="small"  (click)=" playingSong.id === song.id? togglePlayer(isPlaying) : start(song)">
-              <ion-icon name="play-outline" *ngIf="playingSong.id !== song.id"></ion-icon>
-              <ion-icon name="pause-outline" *ngIf="playingSong.id === song.id && isPlaying"></ion-icon>
-              <ion-icon name="play-outline" *ngIf="playingSong.id === song.id && !isPlaying"></ion-icon>
-            </ion-button> -->
             <ion-button slot="end" color="primary"(click)="download(song,'audio')"><ion-icon name="download-outline"></ion-icon></ion-button>
             <ion-button slot="end" color="danger" (click)="delete(song)" *ngIf="user.role==666"><ion-icon name="trash-outline"></ion-icon></ion-button>
             <ion-button slot="end" color="warning" (click)="updatingSong = song; updating = true; " *ngIf="user.role==666"><ion-icon name="create-outline"></ion-icon></ion-button>
           </ion-item>
-        </ion-item-group>
-        <div *ngIf="!isDesktop">
+        </ion-item-group> -->
+        <div *ngIf="!isDesktop" style="text-align: center;">
           <span [ngStyle]="{'font-size':playingSong.id ? '136px':'42px'}">DWN</span>
         </div>
-        <div *ngIf="isDesktop">
+        <div *ngIf="isDesktop" style="text-align: center;">
           <span [ngStyle]="{'font-size':playingSong.id ? '158px':'56px'}">DWN TUBE</span>
         </div>
        
       </ion-list>
-      <!-- Update songs  -->
-      <ion-card *ngIf="updating">
-        <ion-card-header>
-          <ion-card-title>
-            {{updatingSong.title}} - {{updatingSong.artist}}
-          </ion-card-title>
-          <ion-card-subtitle>
-            {{updatingSong.id}}
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-list>
-            <ion-item>
-              <ion-label position="floating">Title</ion-label>
-              <ion-input [(ngModel)]="updateTitle" [placeholder]="updatingSong.title"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Artist</ion-label>
-              <ion-input [(ngModel)]="updateArtist" [placeholder]="updatingSong.artist"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-button slot="end" color="warning" size="medium" (click)="update(updatingSong)" *ngIf="user.role==666"><ion-icon name="save-outline" slot="start"></ion-icon> Save </ion-button>
-              <ion-button slot="end" color="danger" size="medium" (click)="updating = false;" *ngIf="user.role==666"><ion-icon name="close-outline" slot="start"></ion-icon> Cancel </ion-button>
-            </ion-item>
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
+       <!-- Update songs  -->
+      <div *ngIf="updating">
+        <h1>
+          {{updatingSong.title}} - {{updatingSong.artist}}
+        </h1>
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-input [(ngModel)]="updateTitle" [placeholder]="updatingSong.title"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Artist</ion-label>
+            <ion-input [(ngModel)]="updateArtist" [placeholder]="updatingSong.artist"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-button slot="end" color="warning" size="medium" (click)="update(updatingSong)" *ngIf="user.role==666"><ion-icon name="save-outline" slot="start"></ion-icon> Save </ion-button>
+            <ion-button slot="end" color="danger" size="medium" (click)="updating = false;" *ngIf="user.role==666"><ion-icon name="close-outline" slot="start"></ion-icon> Cancel </ion-button>
+          </ion-item>
+        </ion-list>
+      </div>
     </ion-col>
     <ion-col size="12" *ngIf="showing=='videos'">
       <!-- Search bar video -->
@@ -313,7 +326,7 @@
         <ion-icon *ngIf="isPlaying" name="pause-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab> -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="showing == 'player'">
+    <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="showing == 'player'">
       <ion-fab-button [color]="isRandom?'danger':'primary'" (click)="isRandom = !isRandom">
         <ion-icon name="shuffle-outline"></ion-icon>
       </ion-fab-button>
@@ -322,12 +335,12 @@
       <ion-fab-button (click)="repeating = !repeating" [color]="repeating?'danger':'primary'">
         <ion-icon name="repeat-outline"></ion-icon>
       </ion-fab-button>
-    </ion-fab>
-    <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="center" slot="fixed" style="padding-bottom:20px;">
+    </ion-fab> -->
+    <!-- <ion-fab vertical="bottom" *ngIf="showing === 'player'" horizontal="center" slot="fixed" style="padding-bottom:20px;">
       <ion-fab-button (click)="showLyrics = !showLyrics" color="primary">
         <ion-icon name="reader-outline"></ion-icon>
       </ion-fab-button>
-    </ion-fab>
+    </ion-fab> -->
 </ion-content>
 <!-- player in backgound -->
 <ion-footer *ngIf="playingSong.id && showing !== 'player'" style="margin-left:0; margin-right: 0;" class="player-bottom">

@@ -1,12 +1,13 @@
-import { Component, ViewChild, OnInit, Output, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, Output, Input, HostListener } from '@angular/core';
 import { SongService } from '../services/song.service';
 import {Howl, Howler} from 'howler';
-import { IonRange, Animation, AnimationController, IonSegment, Platform } from '@ionic/angular';
+import { IonRange, Animation, AnimationController, IonSegment, Platform, ActionSheetController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DownloadService } from '../services/download.service';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../toast.service';
 import { Plugins, NotificationChannel, LocalNotificationActionPerformed } from '@capacitor/core';
+import { SongModel } from '../models/song.model';
 const { LocalNotifications, CapacitorMusicControls } = Plugins;
 
 @Component({
@@ -22,7 +23,7 @@ export class Tab3Page implements OnInit{
   updatingSong: any;
   updateTitle = '';
   updateArtist = '';
-  songs: any[] = [];
+  songs: SongModel[] = [];
   videos: any[] = [];
   resolution = '480';
   showing: string;
@@ -30,11 +31,12 @@ export class Tab3Page implements OnInit{
   searchSongs: any[] = [];
   searchVideos: any[] = [];
   player: Howl = null;
-  playingSong: any = {}
+  playingSong: SongModel = new SongModel();
   isPlaying = false;
   loading = false;
   progress;
   querySong = '';
+  linksCover = [];
   queryVideo = '';
   displayProgress = '';
   user: any;
@@ -45,35 +47,84 @@ export class Tab3Page implements OnInit{
   isDesktop = false;
   @ViewChild('segment', {static:true}) segment: IonSegment;
   @ViewChild('range') range:IonRange;
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.plt.ready().then(()=>{
+      this.isDesktop = this.plt.is('desktop');
+    });
+  }
   constructor(private authsv:AuthService ,public songsv: SongService,
   private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
-  private toastsv: ToastService, private plt: Platform) {
-    this.isDesktop = this.plt.is('desktop');
+  private toastsv: ToastService, private plt: Platform, public asc: ActionSheetController) {
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.loading = true;
-    this.songsv.currentSongs.subscribe( songs => {
-      this.songs = songs;
-      this.shoudlPlay();
-    });
-    this.dwlsv.currentVideos.subscribe( videos  => {
-      this.videos = videos;
-      this.shoudlPlay();
-    });
     this.songsv.all().subscribe( resp => {
       this.songsv.updateSongsList(resp['songs']);
       this.loading = false;
+      this.songsv.currentSongs.subscribe( songs => {
+        this.songs = songs;
+      });
     }, err => {
       console.error(err);
     });
     this.dwlsv.all().subscribe( resp => {
       this.dwlsv.updateVideoList(resp['videos']);
+      this.dwlsv.currentVideos.subscribe( videos  => {
+        this.videos = videos;
+      });
     }, err =>{
       console.error(err);
     });
     this.base = this.dwlsv.getApiUrl();
   }
+  // funcion que invoca el menu
+  async presentActionSheet(song: SongModel) {
+    const buttonsSU = [
+      {
+        text: 'Delete',
+        role: 'destructive',
+        icon: 'trash',
+        handler: () => {
+          this.delete(song);
+        }
+      },
+      {
+        text: 'Update',
+        icon: 'create',
+        handler: () => {
+          this.updatingSong = song;
+          this.updating = true;
+          this.updateTitle= song.title;
+          this.updateArtist = song.artist
+        }
+      },
+      {
+        text: 'Download',
+        icon: 'download',
+        handler: () => {
+          this.download(song,'audio');
+        }
+      },
+    ];
+    const buttons =[
+      {
+        text: 'Download',
+        icon: 'download',
+        handler: () => {
+          this.download(song,'audio');
+        }
+      },
+    ];
+    const actionSheet = await this.asc.create({
+      header: 'Options',
+      cssClass: 'action-custom',
+      buttons: this.user.role === 666 ? buttonsSU:buttons
+    });
+    await actionSheet.present();
+  }
   ngOnInit(){
+    this.getScreenSize();
     // if(this.plt.is('android') === true){
     //   await LocalNotifications.requestPermission();
     //   // Creating buttons below notification
@@ -212,6 +263,9 @@ export class Tab3Page implements OnInit{
     // }
     this.segment.value = 'songs';
   }
+  copyClipboard(url: string){
+    navigator.clipboard.writeText(url);
+  }
   segmentChanged(ev: any){
     this.showing = ev.detail.value;
   }
@@ -232,6 +286,7 @@ export class Tab3Page implements OnInit{
       if (id.length === 11 && download === undefined) {
         const songQuery = this.songs.filter( song => song.id === id );
         if (songQuery.length > 0 && !this.isPlaying) {
+          console.log(id);
           this.isPlaying = true;
           this.start(songQuery[0]);
         }
@@ -256,7 +311,7 @@ export class Tab3Page implements OnInit{
     this.showing = view;
     this.segment.value = view;
   }
-  start(song: any){
+  start(song: SongModel){
     this.lyrics = 'Loading ....';
     this.songsv.getLyrics(song).subscribe(resp =>{
       if(resp['lyrics']){
@@ -296,6 +351,17 @@ export class Tab3Page implements OnInit{
       }
     });
     this.player.play();
+    const index = this.songs.indexOf(song);
+    if (index === 0) {
+      this.linksCover = [ this.songs[this.songs.length-1].imagePath, this.songs[index].imagePath, this.songs[index+1].imagePath];
+    }
+    if (index === (this.songs.length - 1)) {
+
+      this.linksCover = [ this.songs[index-1].imagePath, this.songs[index].imagePath, this.songs[0].imagePath];
+    }
+    if (index > 0 && index < this.songs.length - 2) {
+      this.linksCover = [ this.songs[index-1].imagePath, this.songs[index].imagePath, this.songs[index+1].imagePath];
+    }
     // if(this.plt.is('android')){
     //   CapacitorMusicControls.create({
     //     track: song.title,		// optional, default : ''
@@ -416,7 +482,7 @@ export class Tab3Page implements OnInit{
       console.log(err);
     });
   }
-  delete(song: any){
+  delete(song: SongModel){
     this.songsv.delete(song.id).subscribe( resp => {
       console.log(resp);
       this.songs = this.songs.filter( _song => _song.id !== song.id );
@@ -424,7 +490,7 @@ export class Tab3Page implements OnInit{
       console.log(err);
     });
   }
-  update(song: any){
+  update(song: SongModel){
     const data = {
       title: this.updateTitle.length > 0 ? this.updateTitle : this.updatingSong.title,
       artist: this.updateArtist.length > 0 ? this.updateArtist : this.updatingSong.artist

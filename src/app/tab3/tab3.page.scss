@@ -1,12 +1,20 @@
 // valiables
 $img-radius: 10px;
-ion-item-group{
-  ion-item:nth-child(1){
-    border-radius: var(--radius);
-  }
-  ion-item:nth-child(2){
-    border-radius: var(--radius-inverse);
-  }
+// ion-item-group{
+//   ion-item:nth-child(1){
+//     border-radius: var(--radius);
+//   }
+//   ion-item:nth-child(2){
+//     border-radius: var(--radius-inverse);
+//   }
+// }
+.sexy{
+  box-shadow:0px -2px rgba(0, 0, 0, var(--shadow));
+  border-radius: 0 30px 0 30px;
+  --background: linear-gradient(var(--ion-color-secondary), var(--ion-color-tertiary));
+}
+ion-searchbar{
+  --background: transparent;
 }
 img{
   border-radius: $img-radius;
@@ -86,21 +94,77 @@ ion-select {
   width: 100%;
   justify-content: center;
 }
-.list-image-song{
-  margin-top: .5rem;
-}
 ion-button{
   --box-shadow:none;
+}
+// player large
+.grid-player{
+  padding-bottom: 56px;
+  display: grid;
+  grid-template-columns: repeat(12,1fr);
+  grid-auto-rows:auto;
+  .showcase{
+    transform-style: preserve-3d;
+    grid-column: 1/13;
+    grid-row: 1;
+    text-align: center;
+    figure{
+      ion-img{
+        position: relative;
+        top: 0;
+        left: 35%;
+        background: var(--ion-color-dark);
+        max-width: 30%;
+        max-height: 200px;
+        border-radius: 10px;
+      }
+    }
+    ion-img:nth-child(1){
+      transform:translate(-50%,100%) scale(0.8) translateZ(-20px);
+      -webkit-filter: blur(1px); /* Safari 6.0 - 9.0 */
+      filter: blur(1px);
+
+    }
+    ion-img:nth-child(2){
+      transform: translate(0px) translateZ(0px);
+    }
+    ion-img:nth-child(3){
+      transform:translate(50%,-100%) scale(0.8) translateZ(-20px);
+      -webkit-filter: blur(1px); /* Safari 6.0 - 9.0 */
+      filter: blur(1px);
+    }
+  }
+  .actions{
+    
+    grid-row: 2;
+    grid-column: 2/12;
+    text-align: center;
+    align-items: center;
+  }
+  .progress{
+    grid-row: 3;
+    grid-column: 2/12;
+  }
+  .controls{
+    grid-row: 4;
+    grid-column: 1/13;
+    text-align: center;
+    ion-button{
+      --background:linear-gradient(var(--ion-color-secondary),var(--ion-color-tertiary));;
+      --border-radius: 20px;
+    }
+  }
 }
 // player in bottom
 ion-footer{
   ion-toolbar{
+    box-shadow: 0px -2px rgba(0, 0, 0, var(--shadow));
     position: absolute;
     bottom: 0;
     left: 0;
     z-index: 1;
     width: 100%;
-    max-height: 180px;
+    max-height: 190px;
     background-color: var(--ion-color-primary);
     transform: translateY(0px);
     border-radius: var(--radius);
@@ -160,6 +224,16 @@ ion-footer{
 
 // Phones
 @media only screen and (max-width: 700px){
+  .grid-player{
+    .showcase{
+      figure{
+        ion-img{
+          left: 15%;
+          max-width: 70%;
+        }
+      }
+    }
+  }
   .full {
     position: fixed;
     top:0;
