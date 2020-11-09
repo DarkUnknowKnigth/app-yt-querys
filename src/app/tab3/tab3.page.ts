@@ -42,11 +42,13 @@ export class Tab3Page implements OnInit{
   chanel: NotificationChannel;
   showLyrics = false;
   lyrics = 'Not avalible';
+  isDesktop = false;
   @ViewChild('segment', {static:true}) segment: IonSegment;
   @ViewChild('range') range:IonRange;
   constructor(private authsv:AuthService ,public songsv: SongService,
   private route: ActivatedRoute, private dwlsv:DownloadService, private animationCtrl: AnimationController,
   private toastsv: ToastService, private plt: Platform) {
+    this.isDesktop = this.plt.is('desktop');
     this.authsv.authStatus.subscribe(user => this.user = user);
     this.showing='songs';
     this.loading = true;
