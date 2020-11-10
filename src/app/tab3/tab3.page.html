@@ -30,9 +30,9 @@
     <!-- Audio player large -->
     <ion-col size="12" size-md *ngIf="showing=='player' && playingSong.id">
        <!-- lyrics helper -->
-       <ion-card *ngIf="showLyrics" color="primary" class="over-all">
+       <ion-card *ngIf="showLyrics" color="tertiary" class="over-all">
         <ion-card-header>
-          <ion-item>
+          <ion-item color="tertiary">
             <ion-label><b>{{playingSong.title}}</b> | <small>{{playingSong.artist}}</small></ion-label>
             <ion-button (click)="showLyrics = false" slot="end" color="danger">
               <ion-icon name="close"></ion-icon>
@@ -40,7 +40,7 @@
           </ion-item>
         </ion-card-header>
         <ion-card-content>
-          <p [innerHTML] = "lyrics" style="display: block; height: 50vh !important; overflow-y: scroll !important;"></p>
+          <p [innerHTML] = "lyrics" class="lyrics-content"></p>
         </ion-card-content>
       </ion-card>
       <div class="grid-player">
@@ -62,7 +62,7 @@
         </div>
         <!-- Actions -->
        <div class="actions">
-        <ion-button (click)="showLyrics = !showLyrics" color="none" size="large">
+        <ion-button (click)="loadLyrics(playingSong)" color="none" size="large">
           <ion-icon slot="icon-only" name="reader-outline"></ion-icon>
         </ion-button>
         <ion-button (click)="copyClipboard(playingSong.path)" color="none" size="large">
@@ -76,20 +76,20 @@
         <ion-range color="primary" #range [(ngModel)]="progress" max="100" (touchend)="seek()" (mouseup)="seek()" class="progress"></ion-range>
         <!-- Player controls -->
         <div class="controls">
-          <ion-button [color]="repeating?'danger':'none'" (click)="repeating = !repeating" size="medium">
+          <ion-button [color]="repeating?'danger':'primary'" (click)="repeating = !repeating" size="medium">
             <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
           </ion-button>
-          <ion-button (click)="prev()" color="none" size="medium">
+          <ion-button (click)="prev()" color="primary" size="medium">
             <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>
           </ion-button>
           <ion-button class="end" (click)="togglePlayer(isPlaying)" size="large">
             <ion-icon slot="icon-only" *ngIf="!isPlaying" name="play-outline"></ion-icon>
             <ion-icon slot="icon-only" *ngIf="isPlaying" name="pause-outline"></ion-icon>
           </ion-button>
-          <ion-button color="none" (click)="next()" size="medium">
+          <ion-button color="primary" (click)="next()" size="medium">
             <ion-icon slot="icon-only" name="play-skip-forward-outline"></ion-icon>
           </ion-button>
-          <ion-button [color]="isRandom?'danger':'none'" (click)="isRandom = !isRandom" size="medium">
+          <ion-button [color]="isRandom?'danger':'primary'" (click)="isRandom = !isRandom" size="medium">
             <ion-icon slot="icon-only" name="shuffle-outline"></ion-icon>
           </ion-button>
         </div>
@@ -344,9 +344,9 @@
 </ion-content>
 <!-- player in backgound -->
 <ion-footer *ngIf="playingSong.id && showing !== 'player'" style="margin-left:0; margin-right: 0;" class="player-bottom">
-  <ion-toolbar  *ngIf="playingSong.id" color="tertiary">
+  <ion-toolbar  *ngIf="playingSong.id" color="primary">
     <ion-item-sliding>
-      <ion-item color="tertiary" class="touchable" lines="none">
+      <ion-item color="primary" class="touchable" lines="none">
         <div class="player-wrapper">
           <div class="player-img">
             <img [src]="playingSong.imagePath">
@@ -355,13 +355,13 @@
             <span id="title-mini">{{playingSong.title}}</span>
             <small>{{playingSong.artist}}</small>
           </div>
-          <ion-button size="large" class="end" *ngIf="playingSong.id && showing != 'player'" (click)="togglePlayer(isPlaying)" color="tertiary">
+          <ion-button size="large" class="end" *ngIf="playingSong.id && showing != 'player'" (click)="togglePlayer(isPlaying)" color="primary">
               <ion-icon slot="icon-only" *ngIf="!isPlaying" name="play-outline"></ion-icon>
               <ion-icon slot="icon-only" *ngIf="isPlaying" name="pause-outline"></ion-icon>
           </ion-button>
         </div>
       </ion-item>
-      <ion-progress-bar color="primary" [value]="progress*0.01" class="progress-bar-player"></ion-progress-bar>
+      <ion-progress-bar color="tertiary" [value]="progress*0.01" class="progress-bar-player"></ion-progress-bar>
       <ion-item-options side="start">
         <ion-item-option (click)="prev()" color="tertiary">
           <ion-icon slot="icon-only" name="play-skip-back-outline"></ion-icon>

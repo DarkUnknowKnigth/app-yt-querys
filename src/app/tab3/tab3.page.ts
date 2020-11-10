@@ -313,16 +313,6 @@ export class Tab3Page implements OnInit{
   }
   start(song: SongModel){
     this.lyrics = 'Loading ....';
-    this.songsv.getLyrics(song).subscribe(resp =>{
-      if(resp['lyrics']){
-        this.lyrics = '<table>'+resp['lyrics'].split('\n').map( row => '<tr><td>'+row+'</td><tr>').join('')+'</table>';
-      }else {
-        this.lyrics ='Error!';
-      }
-    }, err=>{
-      console.log(err);
-      this.lyrics = 'Not found 😒'
-    });
     if(this.player){
       this.player.stop();
     }
@@ -392,6 +382,19 @@ export class Tab3Page implements OnInit{
     //     isPlaying: true, // affects Android only
     //   });
     // }
+  }
+  loadLyrics(song: SongModel){
+    this.songsv.getLyrics(song).subscribe(resp =>{
+      if(resp['lyrics']){
+        this.showLyrics = true;
+        this.lyrics = '<table>'+resp['lyrics'].split('\n').map( row => '<tr><td>'+row+'</td><tr>').join('')+'</table>';
+      }else {
+        console.log(resp);
+        this.toastsv.presentToast('Error when request lyrics !😫');
+      }
+    }, err=>{
+      this.toastsv.presentToast('Lyric not found 😒');
+    });
   }
   togglePlayer(pause: boolean){
     this.isPlaying = !pause;
