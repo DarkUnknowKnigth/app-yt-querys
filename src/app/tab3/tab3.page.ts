@@ -315,6 +315,8 @@ export class Tab3Page implements OnInit{
     this.lyrics = 'Loading ....';
     if(this.player){
       this.player.stop();
+      this.player.unload();
+      this.player = null;
     }
     this.player = new Howl({
       src:[song.path],
