@@ -6,7 +6,7 @@
         Library
       </ion-label>
     </ion-title>
-    <ion-segment (ionChange)="segmentChanged($event)" #segment color="dark">
+    <ion-segment (ionChange)="segmentChanged($event)" #segment>
       <ion-segment-button value="songs">
         <ion-icon name="musical-notes-outline"></ion-icon>Music
       </ion-segment-button>
@@ -30,10 +30,10 @@
     <!-- Audio player large -->
     <ion-col size="12" size-md *ngIf="showing=='player' && playingSong.id">
        <!-- lyrics helper -->
-       <ion-card *ngIf="showLyrics" color="primary">
+       <ion-card *ngIf="showLyrics" color="primary" class="over-all">
         <ion-card-header>
           <ion-item>
-            <ion-label><b>{{playingSong.title}}</b> <small>{{playingSong.artist}}</small></ion-label>
+            <ion-label><b>{{playingSong.title}}</b> | <small>{{playingSong.artist}}</small></ion-label>
             <ion-button (click)="showLyrics = false" slot="end" color="danger">
               <ion-icon name="close"></ion-icon>
             </ion-button>
